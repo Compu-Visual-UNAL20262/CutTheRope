@@ -91,6 +91,14 @@ function draw() {
     : 'PLAYING';
 
   switch (currentState) {
+    case 'LOADING':
+      if (uiManager && typeof uiManager.drawLoading === 'function') {
+        uiManager.drawLoading();
+      } else {
+        drawFallbackScreen('Loading...', 'Please wait');
+      }
+      break;
+
     case 'MENU':
       if (uiManager && typeof uiManager.drawMenu === 'function') {
         uiManager.drawMenu();
