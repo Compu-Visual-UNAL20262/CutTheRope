@@ -11,11 +11,15 @@ let uiManager;
 let particleSystem;
 let levelManager;
 let cutter;
+let customCursor;
 
 /**
  * 1. PRELOAD: Decentralized asset loading per team member
  */
 function preload() {
+  if (typeof CustomCursor !== 'undefined' && typeof CustomCursor.preload === 'function') {
+    CustomCursor.preload();
+  }
   if (typeof MechanicsAssets !== 'undefined' && typeof MechanicsAssets.preload === 'function') {
     MechanicsAssets.preload();
   }
@@ -69,6 +73,11 @@ function setup() {
   // 6. Initialize UI manager (Ariadna)
   if (typeof UIManager !== 'undefined') {
     uiManager = new UIManager(gameState, levelManager);
+  }
+
+  // 7. Initialize custom cursor & slice trail
+  if (typeof CustomCursor !== 'undefined') {
+    customCursor = new CustomCursor();
   }
 }
 
@@ -157,6 +166,12 @@ function draw() {
   if (!levelManager && !uiManager) {
     drawEngineStatus();
   }
+
+  // Always update and render custom cursor on top of all visual elements
+  if (customCursor) {
+    customCursor.update();
+    customCursor.render();
+  }
 }
 
 /**
@@ -223,6 +238,10 @@ function drawFallbackScreen(title, subtitle) {
  * 4. INPUT EVENTS (Mouse & Touch)
  */
 function mousePressed() {
+  if (customCursor) {
+    customCursor.onPress(mouseX, mouseY);
+  }
+
   // UI clicks (buttons / HUD)
   if (uiManager && typeof uiManager.handleClick === 'function') {
     if (uiManager.handleClick(mouseX, mouseY)) {
@@ -244,12 +263,20 @@ function mousePressed() {
 }
 
 function mouseDragged() {
+  if (customCursor) {
+    customCursor.onDrag(mouseX, mouseY);
+  }
+
   if (cutter && typeof cutter.onDrag === 'function') {
     cutter.onDrag(mouseX, mouseY);
   }
 }
 
 function mouseReleased() {
+  if (customCursor) {
+    customCursor.onRelease();
+  }
+
   if (cutter && typeof cutter.onRelease === 'function') {
     cutter.onRelease();
   }
