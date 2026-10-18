@@ -5,8 +5,9 @@
  */
 
 const CONFIG = {
-  CANVAS_WIDTH: 800,
-  CANVAS_HEIGHT: 600,
+  // Proportional vertical resolution for Cut the Rope (Aspect Ratio 2:3, classic 320x480 / 640x960)
+  CANVAS_WIDTH: 480,
+  CANVAS_HEIGHT: 720,
   GRAVITY_Y: 1.0,
 
   LABELS: {

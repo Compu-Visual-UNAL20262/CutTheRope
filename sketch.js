@@ -35,8 +35,8 @@ function preload() {
  * 2. SETUP: Canvas, physics engine, and coordinator initialization
  */
 function setup() {
-  const w = (typeof CONFIG !== 'undefined' && CONFIG.CANVAS_WIDTH) ? CONFIG.CANVAS_WIDTH : 800;
-  const h = (typeof CONFIG !== 'undefined' && CONFIG.CANVAS_HEIGHT) ? CONFIG.CANVAS_HEIGHT : 600;
+  const w = (typeof CONFIG !== 'undefined' && CONFIG.CANVAS_WIDTH) ? CONFIG.CANVAS_WIDTH : 480;
+  const h = (typeof CONFIG !== 'undefined' && CONFIG.CANVAS_HEIGHT) ? CONFIG.CANVAS_HEIGHT : 720;
 
   const canvas = createCanvas(w, h);
   const container = document.getElementById('game-container');
@@ -190,7 +190,7 @@ function checkOutOfBounds() {
     }
   }
 
-  const limitY = ((typeof CONFIG !== 'undefined' && CONFIG.CANVAS_HEIGHT) ? CONFIG.CANVAS_HEIGHT : 600) + 50;
+  const limitY = ((typeof CONFIG !== 'undefined' && CONFIG.CANVAS_HEIGHT) ? CONFIG.CANVAS_HEIGHT : 720) + 50;
 
   if (candyY !== null && candyY > limitY) {
     if (gameState && typeof gameState.setLost === 'function') {
