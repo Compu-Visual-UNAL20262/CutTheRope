@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cut the Rope - p5.js & Matter.js</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="game-container"></div>
+
+  <!-- 1. Librerías Base (lib/) -->
+  <script src="lib/matter.min.js"></script>
+  <script src="lib/p5.min.js"></script>
+  <script src="lib/p5.sound.min.js"></script>
+
+  <!-- 2. Configuración y Núcleo Físico (Ángel & Farid) -->
+  <script src="src/config.js"></script>
+  <script src="src/core/PhysicsWorld.js"></script>
+
+  <!-- 3. Mecánicas: Cuerdas, Corte y Fuerzas (Farid) -->
+  <script src="src/mechanics/Rope.js"></script>
+  <script src="src/mechanics/Cutter.js"></script>
+  <script src="src/mechanics/Gimmicks.js"></script>
+
+  <!-- 4. Entidades y Niveles (Nicolás) -->
+  <script src="src/entities/Candy.js"></script>
+  <script src="src/entities/Target.js"></script>
+  <script src="src/entities/Collectibles.js"></script>
+  <script src="src/entities/LevelManager.js"></script>
+
+  <!-- 5. UI, Estados y Partículas (Ariadna) -->
+  <script src="src/ui/GameState.js"></script>
+  <script src="src/ui/UIManager.js"></script>
+  <script src="src/ui/ParticleSystem.js"></script>
+
+  <!-- 6. Ciclo de Vida y Orquestación Principal (Ángel) -->
+  <script src="sketch.js"></script>
+</body>
+</html>
