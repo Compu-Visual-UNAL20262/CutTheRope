@@ -1,13 +1,13 @@
 /**
  * src/core/PhysicsWorld.js
- * Wrapper sobre Matter.js Engine y World, coordinador de colisiones y ciclo físico.
- * Responsabilidad: Ángel [BASE]
+ * Wrapper around Matter.js Engine & World, collision coordinator, and physics stepping.
+ * Responsibility: Ángel [BASE]
  */
 
 class PhysicsWorld {
   constructor() {
     if (typeof Matter === 'undefined') {
-      throw new Error('PhysicsWorld requiere que Matter.js esté cargado previamente.');
+      throw new Error('PhysicsWorld requires Matter.js to be loaded beforehand.');
     }
 
     this.Engine = Matter.Engine;
@@ -15,23 +15,23 @@ class PhysicsWorld {
     this.Composite = Matter.Composite;
     this.Events = Matter.Events;
 
-    // Crear motor de física
+    // Create the physics engine
     this.engine = this.Engine.create();
     this.world = this.engine.world;
 
-    // Configurar gravedad según CONFIG
+    // Configure gravity based on CONFIG
     const gravityY = (typeof CONFIG !== 'undefined' && CONFIG.GRAVITY_Y !== undefined)
       ? CONFIG.GRAVITY_Y
       : 1.0;
     this.world.gravity.x = 0;
     this.world.gravity.y = gravityY;
 
-    // Inicializar listener de colisiones
+    // Set up collision event listener
     this.setupCollisionListener();
   }
 
   /**
-   * Configura el despacho automático de colisiones hacia los gameObjects
+   * Sets up automatic collision dispatching to gameObjects via onCollide()
    */
   setupCollisionListener() {
     this.Events.on(this.engine, 'collisionStart', (event) => {
@@ -53,7 +53,7 @@ class PhysicsWorld {
   }
 
   /**
-   * Agrega uno o varios cuerpos al mundo físico
+   * Adds one or multiple bodies to the physics world
    * @param {Matter.Body|Matter.Body[]} body
    */
   addBody(body) {
@@ -65,7 +65,7 @@ class PhysicsWorld {
   }
 
   /**
-   * Remueve un cuerpo del mundo físico
+   * Removes a body from the physics world
    * @param {Matter.Body} body
    */
   removeBody(body) {
@@ -75,7 +75,7 @@ class PhysicsWorld {
   }
 
   /**
-   * Agrega una restricción (Constraint / Cuerda) al mundo
+   * Adds a constraint (rope link/pin) to the physics world
    * @param {Matter.Constraint|Matter.Constraint[]} constraint
    */
   addConstraint(constraint) {
@@ -87,7 +87,7 @@ class PhysicsWorld {
   }
 
   /**
-   * Remueve una restricción del mundo físico
+   * Removes a constraint from the physics world
    * @param {Matter.Constraint} constraint
    */
   removeConstraint(constraint) {
@@ -97,7 +97,7 @@ class PhysicsWorld {
   }
 
   /**
-   * Limpia todos los cuerpos, restricciones y compuestos del mundo
+   * Clears all bodies, constraints, and composites from the world
    */
   clearWorld() {
     this.World.clear(this.world, false);
@@ -105,15 +105,15 @@ class PhysicsWorld {
   }
 
   /**
-   * Avanza un paso en la simulación física
-   * @param {number} delta - Tiempo en milisegundos (por defecto 1000/60)
+   * Advances the physics simulation by delta milliseconds
+   * @param {number} delta - Elapsed time in ms (defaults to 1000/60)
    */
   update(delta = 1000 / 60) {
     this.Engine.update(this.engine, delta);
   }
 }
 
-// Exposición global
+// Global scope export
 if (typeof window !== 'undefined') {
   window.PhysicsWorld = PhysicsWorld;
 }

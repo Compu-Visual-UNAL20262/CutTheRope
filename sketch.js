@@ -1,10 +1,10 @@
 /**
  * sketch.js
- * Ciclo de vida principal de p5.js y orquestación del motor, entidades y UI.
- * Responsabilidad: Ángel [BASE]
+ * Main p5.js lifecycle and orchestration for physics engine, entities, and UI.
+ * Responsibility: Ángel [BASE]
  */
 
-// Instancias globales del sistema
+// Global system instances
 let physicsWorld;
 let gameState;
 let uiManager;
@@ -13,7 +13,7 @@ let levelManager;
 let cutter;
 
 /**
- * 1. PRELOAD: Carga descentralizada de assets por cada integrante
+ * 1. PRELOAD: Decentralized asset loading per team member
  */
 function preload() {
   if (typeof MechanicsAssets !== 'undefined' && typeof MechanicsAssets.preload === 'function') {
@@ -28,7 +28,7 @@ function preload() {
 }
 
 /**
- * 2. SETUP: Inicialización del lienzo, motor físico y coordinadores
+ * 2. SETUP: Canvas, physics engine, and coordinator initialization
  */
 function setup() {
   const w = (typeof CONFIG !== 'undefined' && CONFIG.CANVAS_WIDTH) ? CONFIG.CANVAS_WIDTH : 800;
@@ -40,25 +40,25 @@ function setup() {
     canvas.parent(container);
   }
 
-  // 1. Iniciar motor físico
+  // 1. Initialize physics engine
   physicsWorld = new PhysicsWorld();
 
-  // 2. Iniciar sistema de partículas (Ariadna)
+  // 2. Initialize particle system (Ariadna)
   if (typeof ParticleSystem !== 'undefined') {
     particleSystem = new ParticleSystem();
   }
 
-  // 3. Iniciar máquina de estados (Ariadna)
+  // 3. Initialize game state machine (Ariadna)
   if (typeof GameState !== 'undefined') {
     gameState = new GameState();
   }
 
-  // 4. Iniciar cortador / slice (Farid)
+  // 4. Initialize rope cutter / slice mechanic (Farid)
   if (typeof Cutter !== 'undefined') {
     cutter = new Cutter();
   }
 
-  // 5. Iniciar gestor de niveles (Nicolás)
+  // 5. Initialize level manager (Nicolás)
   if (typeof LevelManager !== 'undefined') {
     levelManager = new LevelManager(physicsWorld);
     if (typeof levelManager.loadLevel === 'function') {
@@ -66,17 +66,17 @@ function setup() {
     }
   }
 
-  // 6. Iniciar gestor de UI (Ariadna)
+  // 6. Initialize UI manager (Ariadna)
   if (typeof UIManager !== 'undefined') {
     uiManager = new UIManager(gameState, levelManager);
   }
 }
 
 /**
- * 3. DRAW: Bucle principal a 60 FPS
+ * 3. DRAW: Main game loop at 60 FPS
  */
 function draw() {
-  // Estado actual del juego
+  // Current game state
   const currentState = (gameState && gameState.currentState)
     ? gameState.currentState
     : 'PLAYING';
@@ -86,29 +86,29 @@ function draw() {
       if (uiManager && typeof uiManager.drawMenu === 'function') {
         uiManager.drawMenu();
       } else {
-        drawFallbackScreen('Cut the Rope', 'Presiona para jugar');
+        drawFallbackScreen('Cut the Rope', 'Click to play');
       }
       break;
 
     case 'PLAYING':
-      // 1. Fondo
+      // 1. Background
       if (uiManager && typeof uiManager.drawBackground === 'function') {
         uiManager.drawBackground();
       } else {
         background(35);
       }
 
-      // 2. Actualizar física
+      // 2. Step physics simulation
       if (physicsWorld) {
         physicsWorld.update();
       }
 
-      // 3. Renderizar entidades y niveles (Nicolás)
+      // 3. Render entities and level elements (Nicolás)
       if (levelManager && typeof levelManager.render === 'function') {
         levelManager.render();
       }
 
-      // 4. Mecánica de corte (Farid)
+      // 4. Cutting mechanic (Farid)
       if (cutter) {
         if (typeof cutter.update === 'function') {
           cutter.update();
@@ -118,7 +118,7 @@ function draw() {
         }
       }
 
-      // 5. Partículas (Ariadna)
+      // 5. Particles (Ariadna)
       if (particleSystem) {
         if (typeof particleSystem.update === 'function') {
           particleSystem.update();
@@ -128,23 +128,23 @@ function draw() {
         }
       }
 
-      // 6. HUD superior (Ariadna)
+      // 6. Top HUD (Ariadna)
       if (uiManager && typeof uiManager.drawHUD === 'function') {
         uiManager.drawHUD();
       }
 
-      // 7. Verificación de límites (Lógica de Ángel)
+      // 7. Out-of-bounds check (Ángel's logic)
       checkOutOfBounds();
       break;
 
     case 'LEVEL_WON':
     case 'LEVEL_LOST':
     case 'GAME_COMPLETED':
-      // Mantener último frame visible o dibujar overlay
+      // Render overlay for completion/failure states
       if (uiManager && typeof uiManager.drawOverlay === 'function') {
         uiManager.drawOverlay(currentState);
       } else {
-        drawFallbackScreen(currentState, 'Click para continuar');
+        drawFallbackScreen(currentState, 'Click to continue');
       }
       break;
 
@@ -153,20 +153,20 @@ function draw() {
       break;
   }
 
-  // Pantalla informativa de Fase 1 si los módulos del equipo aún no están instanciados
+  // Phase 1 visual indicator when team components are not yet initialized
   if (!levelManager && !uiManager) {
     drawEngineStatus();
   }
 }
 
 /**
- * Control de Fuera de Límites:
- * Verifica si el dulce salió del lienzo por la parte inferior para disparar derrota.
+ * Out-of-bounds check:
+ * Verifies if the candy fell below the canvas viewport to trigger defeat.
  */
 function checkOutOfBounds() {
   let candyY = null;
 
-  // Buscar posición del dulce a través del LevelManager o variable global
+  // Retrieve candy position from LevelManager or global reference
   if (levelManager && levelManager.candy) {
     if (levelManager.candy.body && levelManager.candy.body.position) {
       candyY = levelManager.candy.body.position.y;
@@ -187,7 +187,7 @@ function checkOutOfBounds() {
 }
 
 /**
- * Indicador visual para Fase 1 (Base y Cajas Grises)
+ * Visual indicator for Phase 1 (Base & Graybox)
  */
 function drawEngineStatus() {
   push();
@@ -195,16 +195,16 @@ function drawEngineStatus() {
   noStroke();
   textAlign(CENTER, CENTER);
   textSize(22);
-  text('Cut the Rope — Core & Motor Físico (Ángel)', width / 2, height / 2 - 40);
+  text('Cut the Rope — Core & Physics Engine (Ángel)', width / 2, height / 2 - 40);
   textSize(14);
   fill(180);
-  text('PhysicsWorld y Matter.js activos a 60 FPS', width / 2, height / 2);
-  text('Esperando implementación de entidades, mecánicas y UI...', width / 2, height / 2 + 25);
+  text('PhysicsWorld and Matter.js active at 60 FPS', width / 2, height / 2);
+  text('Waiting for entities, mechanics, and UI implementations...', width / 2, height / 2 + 25);
   pop();
 }
 
 /**
- * Pantalla de reserva para estados si UIManager aún no está listo
+ * Fallback overlay screen if UIManager is not yet available
  */
 function drawFallbackScreen(title, subtitle) {
   background(20, 20, 25, 200);
@@ -220,24 +220,24 @@ function drawFallbackScreen(title, subtitle) {
 }
 
 /**
- * 4. EVENTOS DE ENTRADA (Mouse & Touch)
+ * 4. INPUT EVENTS (Mouse & Touch)
  */
 function mousePressed() {
-  // Clics en interfaz (botones / HUD)
+  // UI clicks (buttons / HUD)
   if (uiManager && typeof uiManager.handleClick === 'function') {
     if (uiManager.handleClick(mouseX, mouseY)) {
       return;
     }
   }
 
-  // Interacción con gimmicks (burbujas, cojines)
+  // Interaction with gimmicks (bubbles, air cushions)
   if (levelManager && typeof levelManager.handleClick === 'function') {
     if (levelManager.handleClick(mouseX, mouseY)) {
       return;
     }
   }
 
-  // Inicio de trazo del cortador
+  // Start cutter swipe path
   if (cutter && typeof cutter.onPress === 'function') {
     cutter.onPress(mouseX, mouseY);
   }

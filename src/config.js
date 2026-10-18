@@ -1,7 +1,7 @@
 /**
  * src/config.js
- * Configuración global del juego: dimensiones, gravedad, etiquetas y categorías de colisión.
- * Responsabilidad: Ángel y Farid [BASE]
+ * Global game configuration: dimensions, gravity, labels, and collision categories.
+ * Responsibility: Ángel & Farid [BASE]
  */
 
 const CONFIG = {
@@ -15,7 +15,7 @@ const CONFIG = {
     TARGET: 'TARGET',
     BUBBLE: 'BUBBLE',
     ROPE_NODE: 'ROPE_NODE',
-    SPIKE: 'SPIKE' // Reservado por si Nicolás decide implementar el bonus
+    SPIKE: 'SPIKE' // Reserved for optional spikes mechanic
   },
 
   COLLISION_CATEGORIES: {
@@ -26,7 +26,7 @@ const CONFIG = {
   }
 };
 
-// Exposición en el entorno global para compatibilidad con scripts y módulos
+// Global scope export for compatibility across scripts and modules
 if (typeof window !== 'undefined') {
   window.CONFIG = CONFIG;
 }
