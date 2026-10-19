@@ -3,15 +3,18 @@
 <div align="center">
   <table border="0" style="border: none; border-collapse: collapse;">
     <tr>
-      <td align="center" style="border: none; padding: 10px;">
-        <img src="assets/docs/cut_the_rope_cover.png" alt="Cut the Rope Original Promotional Artwork" width="320" />
+      <td align="center" style="border: none; padding: 10px;" valign="middle">
+        <img src="assets/docs/om_nom_clapping.gif" alt="Animated Om Nom Clapping" width="220" />
       </td>
-      <td align="center" style="border: none; padding: 10px;">
-        <img src="assets/docs/om_nom_clapping.gif" alt="Animated Om Nom Clapping" width="260" />
+      <td align="center" style="border: none; padding: 10px;" valign="middle">
+        <img src="assets/docs/cut_the_rope_cover.png" alt="Cut the Rope Original Promotional Artwork" width="310" />
+      </td>
+      <td align="center" style="border: none; padding: 10px;" valign="middle">
+        <img src="assets/docs/om_nom_thinking.gif" alt="Animated Om Nom Thinking and Pondering" width="220" />
       </td>
     </tr>
   </table>
-  <p><sub><em>Cut the Rope (2010) classic promotional artwork alongside animated celebratory Om Nom. Sourced and adapted for educational and academic showcase purposes.</em></sub></p>
+  <p><sub><em>Cut the Rope (2010) classic promotional artwork flanked by celebratory and pondering animations of Om Nom. Sourced and adapted for educational and academic showcase purposes.</em></sub></p>
 </div>
 
 A modular physics puzzle remake inspired by the worldwide mobile classic **Cut the Rope** (2010), developed in JavaScript using the [p5.js](https://p5js.org/) creative coding library and the [Matter.js](https://brm.io/matter-js/) 2D physics engine.
@@ -23,9 +26,13 @@ A modular physics puzzle remake inspired by the worldwide mobile classic **Cut t
 ## 🕹️ Overview & Gameplay
 
 ### What is Cut the Rope?
+<img align="right" src="assets/docs/om_nom_feedme.gif" alt="Hungry Om Nom Waiting for Candy" width="170" style="margin-left: 20px; margin-bottom: 10px;" />
+
 Originally released in 2010, **Cut the Rope** is a seminal physics-based puzzle video game. Players are tasked with feeding delicious candy to a small, lovable green creature named **Om Nom**. The candy is suspended by one or more elastic ropes, swings across obstacles, collects up to three golden stars, and interacts with environmental gadgets (bubbles, air cushions, gravity triggers, and spikes).
 
 The player slices the ropes by swiping across the screen with a blade gesture, timing the cuts to use gravitational acceleration and momentum to guide the treat safely into Om Nom's waiting mouth.
+
+<br clear="right"/>
 
 ### Key Highlights of This Remake
 - **Matter.js Rigid Body & Constraint Physics:** Real-time Verlet-like multi-node rope simulation with dynamic tension, stiffness, and pendulum momentum.
@@ -64,6 +71,10 @@ The player slices the ropes by swiping across the screen with a blade gesture, t
 
 The project was developed under a contract-driven modular architecture where each developer took ownership of distinct systems:
 
+<div align="center">
+  <img src="assets/docs/om_nom_surprised.gif" alt="Surprised Om Nom and Om Nelle" width="220" />
+</div>
+
 | Developer | Role | Module & Key Contributions |
 | :--- | :--- | :--- |
 | **Ángel** | **Core Architecture & Physics World** (*The Foundation*) | Authored [sketch.js](sketch.js) and [src/core/PhysicsWorld.js](src/core/PhysicsWorld.js). Established the Matter.js physics engine integration, 60 FPS update cycle, master gravity and boundaries, collision event dispatcher (`onCollide`), and coordinated the central orchestration lifecycle (`preload`, `setup`, `draw`, and input events). Co-authored [src/config.js](src/config.js). |
@@ -88,7 +99,18 @@ CutTheRope/
 │   │   ├── controls_left_click.gif  # Animated left-click & slice icon (Smashicons)
 │   │   ├── controls_right_click.gif # Animated right-click icon (Smashicons)
 │   │   ├── cut_the_rope_cover.png   # High-resolution original promotional artwork
-│   │   └── om_nom_clapping.gif      # Celebratory animated Om Nom GIF
+│   │   ├── om_nom_clapping.gif      # Celebratory animated Om Nom GIF (Tenor)
+│   │   ├── om_nom_excited.gif       # Cheerful victory celebration GIF (Tenor)
+│   │   ├── om_nom_feedme.gif        # Hungry Om Nom waiting for candy GIF (Tenor)
+│   │   ├── om_nom_freaking_out.gif  # Stressed Om Nom screaming GIF (Tenor)
+│   │   ├── om_nom_jaw_dropping.gif  # Impressed jaw-dropping Om Nom GIF (Tenor)
+│   │   ├── om_nom_kiss.gif          # Loving kiss Om Nom GIF (Tenor)
+│   │   ├── om_nom_ready_to_fight.gif# Battle stance Om Nom GIF (Tenor)
+│   │   ├── om_nom_shaking_head.gif  # Shaking head disapproval Om Nom GIF (Tenor)
+│   │   ├── om_nom_surprised.gif     # Surprised Om Nom & Om Nelle GIF (Tenor)
+│   │   ├── om_nom_thinking.gif      # Pondering puzzle Om Nom GIF (Tenor)
+│   │   ├── om_nom_wow.gif           # Impressed Wow Om Nom GIF (Tenor)
+│   │   └── om_nom_yawn.gif          # Bored yawning Om Nom GIF (Tenor - Asset reserve)
 │   ├── favicon/                    # Web application icons and manifest
 │   ├── ui/
 │   │   ├── apptivity_banner.png    # Om Nom open mouth loading banner
@@ -156,6 +178,8 @@ CutTheRope/
 
 ## 🎨 Sprites, Artwork & Visual Assets
 
+<img align="right" src="assets/docs/om_nom_shaking_head.gif" alt="Om Nom Shaking Head - No" width="150" style="margin-left: 20px; margin-bottom: 10px;" />
+
 ### Visual Asset Sources & Attribution
 All visual assets were obtained from community preservation archives and curated specifically for this project:
 
@@ -170,15 +194,37 @@ All visual assets were obtained from community preservation archives and curated
   - `loaderbar_full.png` & `spinner.png`: Candy-striped progress bar and rotating wheel.
 - **Promotional Illustrations & Showcase:**
   - `assets/docs/cut_the_rope_cover.png`: Original Cut the Rope cover illustration showcasing Om Nom, candy, and scissors.
-  - `assets/docs/om_nom_clapping.gif`: Celebratory animation of Om Nom clapping.
+
+- **Animated Community GIFs & Reactions (Tenor):**
+  Character animation GIFs of Om Nom were sourced from [Tenor.com](https://tenor.com/) and adapted for documentation showcases and reactive visual feedback:
+  - **Om Nom Clapping:** [Clapping Om Nom (Excited / Thrilled)](https://tenor.com/view/clapping-om-nom-om-nom-stories-excited-thrilled-gif-9984157943214291792) – Featured in the project header banner (left).
+  - **Om Nom Thinking:** [Thinking Om Nom (Considering / Pondering)](https://tenor.com/view/thinking-om-nom-cut-the-rope-considering-pondering-gif-26818523) – Featured in the project header banner (right).
+  - **Om Nom Feed Me:** [Cut the Rope Feed Me (Hungry)](https://tenor.com/view/cut-the-rope-feedme-hungry-gif-11675089) – Featured in the Overview & Gameplay section.
+  - **Om Nom Surprised:** [Surprised Om Nom (OMG / Om Nelle)](https://tenor.com/view/surprised-om-nom-om-nelle-cut-the-rope-omg-gif-1819623925838053034) – Featured in the Team & Development Roles section.
+  - **Om Nom Shaking Head:** [Shaking Head Om Nom (SMH / No)](https://tenor.com/view/shaking-my-head-om-nom-om-nom-and-cut-the-rope-smh-no-gif-25538657) – Featured in Sprites, Artwork & Visual Assets.
+  - **Om Nom Jaw Dropping:** [Jaw Dropping Om Nom (Nibble Nom / Impressed)](https://tenor.com/view/jaw-dropping-om-nom-nibble-nom-cut-the-rope-impressed-gif-8249317190795755440) – Featured in Vector-Engineered Title Signboard.
+  - **Om Nom Freaking Out:** [Freaking Out Om Nom (Screaming / Going Crazy)](https://tenor.com/view/freaking-out-om-nom-cut-the-rope-screaming-going-crazy-gif-3927534681297224760) – Featured in Sound Design & Audio Adaptation.
+  - **Om Nom Excited:** [Excited Om Nom (Happy)](https://tenor.com/view/excited-om-nom-om-nom-stories-om-nom-and-cut-the-rope-happy-gif-26647750) – Featured in References & Research.
+  - **Om Nom Wow:** [Wow Om Nom (That's Amazing / I Love This)](https://tenor.com/view/wow-om-nom-cut-the-rope-that's-amazing-i-love-this-gif-12346611675352339536) – Featured in Technical Debt & Known Scope Limitations.
+  - **Om Nom Ready to Fight:** [Ready to Fight Om Nom (Fighting Stance / Ready to Brawl)](https://tenor.com/view/ready-to-fight-om-nom-om-nom-stories-fighting-stance-ready-to-brawl-gif-8029144922046973558) – Featured in Running the Project Locally.
+  - **Om Nom Kiss:** [Kiss on the Cheek Om Nom (Love You)](https://tenor.com/view/kiss-on-the-cheek-om-nom-om-nom-stories-love-you-cut-the-rope-gif-17615010227572962049) – Featured in Artificial Intelligence Disclosure & Acknowledgments.
+  - **Om Nom Yawning *(Media Reserve / Backlog)*:** [Yawn Om Nom (Bored / Falling Asleep)](https://tenor.com/view/yawn-om-nom-cut-the-rope-bored-falling-asleep-gif-26818518) – Stored in `assets/docs/om_nom_yawn.gif` as a reserved visual asset ready to be linked when documentation expands to cover idle timeout / sleep mechanics.
+
 - **Animated Controls & Interaction Icons:**
   - `assets/docs/controls_left_click.gif`, `assets/docs/controls_right_click.gif`, and `assets/docs/controls_cursor.gif`: Sourced from master vectors designed by **[Smashicons from Flaticon](https://www.flaticon.com/authors/smashicons)** under *Free for commercial use WITH ATTRIBUTION* license (Licensee: Angel Beltran, 19 Oct 2026). Rendered directly from vector paths with super-sampled antialiasing and procedural keyframe animations simulating tactile click bounce, dynamic velocity tilt, trailing particle ribbons, shockwave burst ripples, and blade swipe trail effects.
 
+<br clear="right"/>
+
 ### Vector-Engineered Title Signboard
+
+<img align="right" src="assets/docs/om_nom_jaw_dropping.gif" alt="Jaw Dropping Om Nom Impressed" width="160" style="margin-left: 20px; margin-bottom: 10px;" />
+
 To prevent raster jaggedness and eliminate square background artifacts, the `"CUT THE ROPE"` title banner in the main menu is engineered directly as a vector Canvas element:
 - Dual-line typography: `"CUT THE"` in warm cream with dark outline and `"ROPE"` in vibrant candy green with 3D drop shadow and top specular highlights.
 - Beveled wooden board with brass corner rivets, suspended by two realistic ropes anchored to the ceiling.
 - Vertically centered typography with balanced margins (~18 px top, ~17 px bottom) and safe clearance from the swinging pendulum candy.
+
+<br clear="right"/>
 
 ### Intellectual Property & Trademark Protection
 In strict adherence to intellectual property standards and educational use guidelines:
@@ -188,6 +234,8 @@ In strict adherence to intellectual property standards and educational use guide
 ---
 
 ## 🔊 Sound Design & Audio Adaptation
+
+<img align="right" src="assets/docs/om_nom_freaking_out.gif" alt="Freaking Out Om Nom Screaming" width="160" style="margin-left: 20px; margin-bottom: 10px;" />
 
 ### Audio Sources & Attribution
 - **Menu Theme Track:**
@@ -204,9 +252,13 @@ Modern web browsers enforce strict security restrictions regarding audio playbac
 3. **Page Visibility Synchronization:**
    An event listener on `visibilitychange` automatically pauses playback when the user switches browser tabs and resumes playback when returning.
 
+<br clear="right"/>
+
 ---
 
 ## 📚 References & Research
+
+<img align="right" src="assets/docs/om_nom_excited.gif" alt="Excited Om Nom Celebrating" width="160" style="margin-left: 20px; margin-bottom: 10px;" />
 
 - **Visual Sprites (PC):** [The Spriters Resource – Cut the Rope (PC)](https://www.spriters-resource.com/pc_computer/cuttherope/)
 - **Visual Sprites (Mobile Assets #51423):** [The Spriters Resource – Cut the Rope (Mobile)](https://www.spriters-resource.com/mobile/cutrope/asset/51423/)
@@ -214,19 +266,28 @@ Modern web browsers enforce strict security restrictions regarding audio playbac
 - **Original Soundtrack Archive:** [Khinsider – Cut the Rope Arcade Gamerip (2016)](https://downloads.khinsider.com/game-soundtracks/album/cut-the-rope-arcade-gamerip-2016)
 - **Physics Engine Documentation:** [Matter.js Official Documentation & Constraint Guides](https://brm.io/matter-js/docs/)
 - **Graphics Engine Documentation:** [p5.js Official Reference](https://p5js.org/reference/)
+- **Community GIF & Reaction Archive:** [Tenor.com](https://tenor.com/) (Licensed via Tenor/Google Terms of Service for non-commercial editorial & showcase sharing)
+
+<br clear="right"/>
 
 ---
 
 ## 🛠️ Technical Debt & Known Scope Limitations
+
+<img align="right" src="assets/docs/om_nom_wow.gif" alt="Wow Om Nom That's Amazing" width="160" style="margin-left: 20px; margin-bottom: 10px;" />
 
 The following items represent design compromises or features scheduled for subsequent development phases:
 - **Spiders & Additional Enemies:** Spiders climbing up ropes to steal the candy were deferred to a future milestone.
 - **Complex Multi-Candy Joints:** Dual-candy mechanics (connecting two treats simultaneously with elastic bands) were simplified to single-candy physics for this sprint.
 - **Level Selection World Map:** The game currently transitions directly from the Main Menu into Level 1, with stage sequencing handled programmatically by [LevelManager.js](src/entities/LevelManager.js) rather than through a card-pack selection screen.
 
+<br clear="right"/>
+
 ---
 
 ## 🚀 Running the Project Locally
+
+<img align="right" src="assets/docs/om_nom_ready_to_fight.gif" alt="Om Nom Ready to Brawl" width="170" style="margin-left: 20px; margin-bottom: 10px;" />
 
 Thanks to the offline architecture implemented in [`src/ui/UIAssetData.js`](src/ui/UIAssetData.js) and the native HTML5 audio pipeline, **this project can be executed either directly as a local file or through an HTTP server**:
 
@@ -249,12 +310,18 @@ If you prefer running through a local development server:
   npx serve .
   ```
 
+<br clear="right"/>
+
 ---
 
 ## 🤖 Artificial Intelligence Disclosure & Acknowledgments
+
+<img align="right" src="assets/docs/om_nom_kiss.gif" alt="Om Nom Loving Kiss on the Cheek" width="160" style="margin-left: 20px; margin-bottom: 10px;" />
 
 Artificial Intelligence tools (**Google Antigravity / Gemini**) were utilized as pair-programming assistants throughout the development of this project. AI assistance was utilized for:
 - **Architecture & System Contracts:** Defining clean modular boundaries between physics simulation ([PhysicsWorld.js](src/core/PhysicsWorld.js)), UI rendering ([UIManager.js](src/ui/UIManager.js)), and state transitions ([GameState.js](src/ui/GameState.js)).
 - **Coordinate Analysis & Sprite Slicing:** Calculating exact bounding boxes and resolving aspect ratio distortions on button and candy sprites.
 - **Browser Compatibility Engineering:** Diagnosing Chromium CORS constraints on local `file:///` protocols and engineering the in-memory Base64 fallback system ([UIAssetData.js](src/ui/UIAssetData.js)) and HTML5 audio unlockers.
 - **Documentation & Structuring:** Drafting and formatting this comprehensive `README.md`.
+
+<br clear="right"/>
