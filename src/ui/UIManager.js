@@ -106,9 +106,10 @@ const UIAssets = {
 };
 
 class UIManager {
-  constructor(gameState, levelManager) {
+  constructor(gameState, levelManager, audioManager = null) {
     this.gameState = gameState;
     this.levelManager = levelManager;
+    this.audioManager = audioManager;
 
     // Loading screen state (calibrated for ~3.3s smooth load time, +1s longer)
     this.loadingProgress = 0;
@@ -143,6 +144,9 @@ class UIManager {
       // Completed loading: transition to MENU
       if (this.gameState && typeof this.gameState.changeState === 'function') {
         this.gameState.changeState('MENU');
+      }
+      if (this.audioManager && typeof this.audioManager.playMenuMusic === 'function') {
+        this.audioManager.playMenuMusic();
       }
       return;
     }
@@ -552,6 +556,9 @@ class UIManager {
         // Switch state to PLAYING
         if (this.gameState && typeof this.gameState.changeState === 'function') {
           this.gameState.changeState('PLAYING');
+        }
+        if (this.audioManager && typeof this.audioManager.fadeOutMenuMusic === 'function') {
+          this.audioManager.fadeOutMenuMusic(500);
         }
         return true;
       }

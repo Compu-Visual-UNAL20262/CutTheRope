@@ -8,6 +8,7 @@
 let physicsWorld;
 let gameState;
 let uiManager;
+let audioManager;
 let particleSystem;
 let levelManager;
 let cutter;
@@ -57,12 +58,17 @@ function setup() {
     gameState = new GameState();
   }
 
-  // 4. Initialize rope cutter / slice mechanic (Farid)
+  // 4. Initialize audio manager (Ariadna)
+  if (typeof AudioManager !== 'undefined') {
+    audioManager = new AudioManager(gameState);
+  }
+
+  // 5. Initialize rope cutter / slice mechanic (Farid)
   if (typeof Cutter !== 'undefined') {
     cutter = new Cutter();
   }
 
-  // 5. Initialize level manager (Nicolás)
+  // 6. Initialize level manager (Nicolás)
   if (typeof LevelManager !== 'undefined') {
     levelManager = new LevelManager(physicsWorld);
     if (typeof levelManager.loadLevel === 'function') {
@@ -70,12 +76,12 @@ function setup() {
     }
   }
 
-  // 6. Initialize UI manager (Ariadna)
+  // 7. Initialize UI manager (Ariadna)
   if (typeof UIManager !== 'undefined') {
-    uiManager = new UIManager(gameState, levelManager);
+    uiManager = new UIManager(gameState, levelManager, audioManager);
   }
 
-  // 7. Initialize custom cursor & slice trail
+  // 8. Initialize custom cursor & slice trail
   if (typeof CustomCursor !== 'undefined') {
     customCursor = new CustomCursor();
   }
