@@ -42,9 +42,11 @@ The player slices the ropes by swiping across the screen with a blade gesture, t
 ### Controls
 | Input / Action | Interaction | Description |
 | :---: | :---: | :--- |
-| **Mouse Click & Drag** / **Touch Swipe** | ✂️ **Rope Slicing** | Swipe across any rope to cut it with a blade slash trail and sparkle burst |
-| **Left Click** / **Tap** | 👆 **Interact / Pop** | Click the Start button, pop floating bubbles, or activate air cushions |
-| **Mouse Movement** | 🖐️ **Cursor Tracking** | Custom white pointer with real-time motion physics and particle ribbon |
+| <img src="assets/docs/controls_left_click.gif" alt="Left Click & Drag / Slice" width="75" /><br><sub>**Left Click & Drag**</sub><br><sub><a href="https://www.flaticon.com/authors/smashicons" target="_blank" rel="noopener">Smashicons</a></sub> | ✂️ **Rope Slicing & UI Tap** | Click and drag across ropes to sever them with a blade slash trail and sparkle burst; click to press Start and interact with bubbles or cushions |
+| <img src="assets/docs/controls_right_click.gif" alt="Right Click / Reset" width="75" /><br><sub>**Right Click**</sub><br><sub><a href="https://www.flaticon.com/authors/smashicons" target="_blank" rel="noopener">Smashicons</a></sub> | 🔄 **Secondary Interaction / Quick Reset** | Secondary click action for immediate level restart and resetting puzzle states |
+| <img src="assets/docs/controls_cursor.gif" alt="Mouse Movement & Cursor Tracking" width="75" /><br><sub>**Mouse Movement**</sub><br><sub><a href="https://www.flaticon.com/authors/smashicons" target="_blank" rel="noopener">Smashicons</a></sub> | 🖐️ **Cursor Tracking** | Custom white pointer with real-time motion physics, velocity tilt, and dynamic particle ribbon trail |
+
+<p align="center"><sub><em>Control icons designed by <a href="https://www.flaticon.com/authors/smashicons" target="_blank" rel="noopener">Smashicons from Flaticon</a> (Free License with Attribution). Enhanced with custom procedural animations simulating tactile clicks, velocity tilt, radial ripple waves, and blade cut motions.</em></sub></p>
 
 ### Core Mechanics & Physics Rules
 - **The Rope Constraints:** Ropes consist of linked chains of Matter.js constraint bodies connected to static pins on the ceiling or walls. They react dynamically to the candy's weight, swinging in natural pendulum arcs.
@@ -82,8 +84,11 @@ CutTheRope/
 │   │   ├── cursor.png              # White Wii-style pointer idle sprite
 │   │   └── cursor_pressed.png      # Pointer pressed state sprite
 │   ├── docs/
-│   │   ├── cut_the_rope_cover.png  # High-resolution original promotional artwork
-│   │   └── om_nom_clapping.gif     # Celebratory animated Om Nom GIF
+│   │   ├── controls_cursor.gif      # Animated cursor motion & trail icon (Smashicons)
+│   │   ├── controls_left_click.gif  # Animated left-click & slice icon (Smashicons)
+│   │   ├── controls_right_click.gif # Animated right-click icon (Smashicons)
+│   │   ├── cut_the_rope_cover.png   # High-resolution original promotional artwork
+│   │   └── om_nom_clapping.gif      # Celebratory animated Om Nom GIF
 │   ├── favicon/                    # Web application icons and manifest
 │   ├── ui/
 │   │   ├── apptivity_banner.png    # Om Nom open mouth loading banner
@@ -166,6 +171,8 @@ All visual assets were obtained from community preservation archives and curated
 - **Promotional Illustrations & Showcase:**
   - `assets/docs/cut_the_rope_cover.png`: Original Cut the Rope cover illustration showcasing Om Nom, candy, and scissors.
   - `assets/docs/om_nom_clapping.gif`: Celebratory animation of Om Nom clapping.
+- **Animated Controls & Interaction Icons:**
+  - `assets/docs/controls_left_click.gif`, `assets/docs/controls_right_click.gif`, and `assets/docs/controls_cursor.gif`: Sourced from master vectors designed by **[Smashicons from Flaticon](https://www.flaticon.com/authors/smashicons)** under *Free for commercial use WITH ATTRIBUTION* license (Licensee: Angel Beltran, 19 Oct 2026). Rendered directly from vector paths with super-sampled antialiasing and procedural keyframe animations simulating tactile click bounce, dynamic velocity tilt, trailing particle ribbons, shockwave burst ripples, and blade swipe trail effects.
 
 ### Vector-Engineered Title Signboard
 To prevent raster jaggedness and eliminate square background artifacts, the `"CUT THE ROPE"` title banner in the main menu is engineered directly as a vector Canvas element:
@@ -203,6 +210,7 @@ Modern web browsers enforce strict security restrictions regarding audio playbac
 
 - **Visual Sprites (PC):** [The Spriters Resource – Cut the Rope (PC)](https://www.spriters-resource.com/pc_computer/cuttherope/)
 - **Visual Sprites (Mobile Assets #51423):** [The Spriters Resource – Cut the Rope (Mobile)](https://www.spriters-resource.com/mobile/cutrope/asset/51423/)
+- **Controls & UI Vector Icons:** [Smashicons – Flaticon](https://www.flaticon.com/authors/smashicons) (Licensed under *Free License with Attribution*)
 - **Original Soundtrack Archive:** [Khinsider – Cut the Rope Arcade Gamerip (2016)](https://downloads.khinsider.com/game-soundtracks/album/cut-the-rope-arcade-gamerip-2016)
 - **Physics Engine Documentation:** [Matter.js Official Documentation & Constraint Guides](https://brm.io/matter-js/docs/)
 - **Graphics Engine Documentation:** [p5.js Official Reference](https://p5js.org/reference/)
