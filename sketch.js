@@ -14,6 +14,19 @@ let levelManager;
 let cutter;
 let customCursor;
 
+function mousePressed() {
+  // Si tienes una lista de dulces, recórrela. Si es uno solo, llámalo directamente:
+  if (candy) {
+    candy.pressed();
+  }
+}
+
+function mouseReleased() {
+  if (candy) {
+    candy.released();
+  }
+}
+
 /**
  * 1. PRELOAD: Decentralized asset loading per team member
  */

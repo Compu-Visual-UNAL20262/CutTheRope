@@ -1,0 +1,71 @@
+
+/**
+ * src/entities/Target.js
+ * Monster and win sensor.
+ */
+
+class Target {
+  constructor(physicsWorld, x, y, radius = TARGET_RADIUS) {
+    this.physicsWorld = physicsWorld;
+    this.radius = radius;
+    this.type = 'target';
+    this.reached = false;
+    this.mouthOpen = false;
+
+    this.body = Matter.Bodies.circle(x, y, radius, {
+      label: CONFIG.LABELS.TARGET,
+      isStatic: true,
+      isSensor: true
+    });
+
+    this.body.gameObject = this;
+    this.physicsWorld.addBody(this.body);
+  }
+
+  update(candy) {
+    if (!candy || this.reached) return;
+
+    const dx = candy.body.position.x - this.body.position.x;
+    const dy = candy.body.position.y - this.body.position.y;
+
+    // Abre la boca cuando el dulce se acerca.
+    this.mouthOpen = Math.sqrt(dx * dx + dy * dy) < DETECTION_RADIUS;
+  }
+
+  render() {
+    const { x, y } = this.body.position;
+
+    push();
+    noStroke();
+
+    // Cuerpo provisional del monstruo
+    fill(100, 205, 75);
+    circle(x, y, this.radius * 2);
+
+    // Ojos
+    fill(255);
+    circle(x - 13, y - 8, 15);
+    circle(x + 13, y - 8, 15);
+
+    fill(25);
+    circle(x - 12, y - 7, 6);
+    circle(x + 14, y - 7, 6);
+
+    // Boca
+    fill(35);
+    if (this.mouthOpen) {
+      ellipse(x, y + 13, 25, 23);
+    } else {
+      ellipse(x, y + 14, 20, 5);
+    }
+
+    pop();
+  }
+
+  onCollide(other) {
+    if (!other || other.type !== 'candy') return;
+
+    this.reached = true;
+    this.mouthOpen = true;
+  }
+}
