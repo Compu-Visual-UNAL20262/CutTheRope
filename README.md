@@ -56,6 +56,9 @@ The player slices the ropes by swiping across the screen with a blade gesture, t
 <p align="center"><sub><em>Control icons designed by <a href="https://www.flaticon.com/authors/smashicons" target="_blank" rel="noopener">Smashicons from Flaticon</a> (Free License with Attribution). Enhanced with custom procedural animations simulating tactile clicks, velocity tilt, radial ripple waves, and blade cut motions.</em></sub></p>
 
 ### Core Mechanics & Physics Rules
+
+<img align="right" src="assets/docs/om_nom_brain_power.gif" alt="Thinking Om Nom Using All Brain Power" width="180" style="margin-left: 20px; margin-bottom: 10px;" />
+
 - **The Rope Constraints:** Ropes consist of linked chains of Matter.js constraint bodies connected to static pins on the ceiling or walls. They react dynamically to the candy's weight, swinging in natural pendulum arcs.
 - **The Cutting Mechanism:** When the cursor drags across the screen, line-segment intersection algorithms test the slice line against every segment of active ropes. Intersected ropes are immediately severed, releasing constraint forces.
 - **The Candy Physics:** A circular rigid body with realistic mass, restitution (bounciness), and air friction. If it falls beyond the bottom boundary of the box (`height + 50px`), the level fails.
@@ -64,6 +67,8 @@ The player slices the ropes by swiping across the screen with a blade gesture, t
 - **Gimmicks & Elements:**
   - **Bubbles:** Encapsulate the candy upon contact, counteracting gravity and causing it to float upward until popped by the player.
   - **Spikes:** Hazardous obstacles that shatter the candy on contact, forcing a level restart.
+
+<br clear="right"/>
 
 ---
 
@@ -87,6 +92,11 @@ The project was developed under a contract-driven modular architecture where eac
 ## 📁 Project Architecture & Class Responsibilities
 
 ### Directory Structure
+
+<div align="center">
+  <img src="assets/docs/om_nom_marching.gif" alt="Marching Om Nom" width="200" />
+</div>
+
 ```text
 CutTheRope/
 ├── assets/
@@ -99,12 +109,15 @@ CutTheRope/
 │   │   ├── controls_left_click.gif  # Animated left-click & slice icon (Smashicons)
 │   │   ├── controls_right_click.gif # Animated right-click icon (Smashicons)
 │   │   ├── cut_the_rope_cover.png   # High-resolution original promotional artwork
+│   │   ├── om_nom_brain_power.gif   # Deep thinking brain power Om Nom GIF (Tenor)
 │   │   ├── om_nom_clapping.gif      # Celebratory animated Om Nom GIF (Tenor)
 │   │   ├── om_nom_excited.gif       # Cheerful victory celebration GIF (Tenor)
 │   │   ├── om_nom_feedme.gif        # Hungry Om Nom waiting for candy GIF (Tenor)
 │   │   ├── om_nom_freaking_out.gif  # Stressed Om Nom screaming GIF (Tenor)
 │   │   ├── om_nom_jaw_dropping.gif  # Impressed jaw-dropping Om Nom GIF (Tenor)
 │   │   ├── om_nom_kiss.gif          # Loving kiss Om Nom GIF (Tenor)
+│   │   ├── om_nom_mad.gif           # Mad annoyed stomping Om Nom GIF (Tenor)
+│   │   ├── om_nom_marching.gif      # Disciplined marching Om Nom GIF (Tenor)
 │   │   ├── om_nom_ready_to_fight.gif# Battle stance Om Nom GIF (Tenor)
 │   │   ├── om_nom_shaking_head.gif  # Shaking head disapproval Om Nom GIF (Tenor)
 │   │   ├── om_nom_surprised.gif     # Surprised Om Nom & Om Nelle GIF (Tenor)
@@ -157,6 +170,9 @@ CutTheRope/
 ```
 
 ### Class Responsibilities Overview
+
+<img align="right" src="assets/docs/om_nom_mad.gif" alt="Mad Om Nom Stomping" width="160" style="margin-left: 20px; margin-bottom: 10px;" />
+
 - **[sketch.js](sketch.js):** Coordinates initialization of physics and graphics, runs the 60 FPS game loop across game states, and dispatches mouse/touch gestures to the cutter and UI.
 - **[src/config.js](src/config.js):** Single source of truth for resolution (`CANVAS_WIDTH = 480`, `CANVAS_HEIGHT = 720`, 2:3 aspect ratio), gravity, collision categories, and offline `p5.loadImage` compatibility layer.
 - **[src/core/PhysicsWorld.js](src/core/PhysicsWorld.js):** Wraps Matter.js `Engine`, `World`, and `Composite`. Evaluates collision pairs and routes callbacks to entity instances.
@@ -173,6 +189,8 @@ CutTheRope/
 - **[src/ui/UIAssetData.js](src/ui/UIAssetData.js):** Encodes all critical interface sprites into Base64 data URIs to guarantee offline rendering without server requirements.
 - **[src/ui/CustomCursor.js](src/ui/CustomCursor.js):** Interactive custom pointer featuring motion physics, velocity tilt, decaying ribbon slash trail, and sparkle emitters.
 - **[src/ui/ParticleSystem.js](src/ui/ParticleSystem.js):** Autonomous 2D particle simulation for confetti, cut sparks, and star collection bursts.
+
+<br clear="right"/>
 
 ---
 
@@ -196,19 +214,25 @@ All visual assets were obtained from community preservation archives and curated
   - `assets/docs/cut_the_rope_cover.png`: Original Cut the Rope cover illustration showcasing Om Nom, candy, and scissors.
 
 - **Animated Community GIFs & Reactions (Tenor):**
-  Character animation GIFs of Om Nom were sourced from [Tenor.com](https://tenor.com/) and adapted for documentation showcases and reactive visual feedback:
-  - **Om Nom Clapping:** [Clapping Om Nom (Excited / Thrilled)](https://tenor.com/view/clapping-om-nom-om-nom-stories-excited-thrilled-gif-9984157943214291792) – Featured in the project header banner (left).
-  - **Om Nom Thinking:** [Thinking Om Nom (Considering / Pondering)](https://tenor.com/view/thinking-om-nom-cut-the-rope-considering-pondering-gif-26818523) – Featured in the project header banner (right).
-  - **Om Nom Feed Me:** [Cut the Rope Feed Me (Hungry)](https://tenor.com/view/cut-the-rope-feedme-hungry-gif-11675089) – Featured in the Overview & Gameplay section.
-  - **Om Nom Surprised:** [Surprised Om Nom (OMG / Om Nelle)](https://tenor.com/view/surprised-om-nom-om-nelle-cut-the-rope-omg-gif-1819623925838053034) – Featured in the Team & Development Roles section.
-  - **Om Nom Shaking Head:** [Shaking Head Om Nom (SMH / No)](https://tenor.com/view/shaking-my-head-om-nom-om-nom-and-cut-the-rope-smh-no-gif-25538657) – Featured in Sprites, Artwork & Visual Assets.
-  - **Om Nom Jaw Dropping:** [Jaw Dropping Om Nom (Nibble Nom / Impressed)](https://tenor.com/view/jaw-dropping-om-nom-nibble-nom-cut-the-rope-impressed-gif-8249317190795755440) – Featured in Vector-Engineered Title Signboard.
-  - **Om Nom Freaking Out:** [Freaking Out Om Nom (Screaming / Going Crazy)](https://tenor.com/view/freaking-out-om-nom-cut-the-rope-screaming-going-crazy-gif-3927534681297224760) – Featured in Sound Design & Audio Adaptation.
-  - **Om Nom Excited:** [Excited Om Nom (Happy)](https://tenor.com/view/excited-om-nom-om-nom-stories-om-nom-and-cut-the-rope-happy-gif-26647750) – Featured in References & Research.
-  - **Om Nom Wow:** [Wow Om Nom (That's Amazing / I Love This)](https://tenor.com/view/wow-om-nom-cut-the-rope-that's-amazing-i-love-this-gif-12346611675352339536) – Featured in Technical Debt & Known Scope Limitations.
-  - **Om Nom Ready to Fight:** [Ready to Fight Om Nom (Fighting Stance / Ready to Brawl)](https://tenor.com/view/ready-to-fight-om-nom-om-nom-stories-fighting-stance-ready-to-brawl-gif-8029144922046973558) – Featured in Running the Project Locally.
-  - **Om Nom Kiss:** [Kiss on the Cheek Om Nom (Love You)](https://tenor.com/view/kiss-on-the-cheek-om-nom-om-nom-stories-love-you-cut-the-rope-gif-17615010227572962049) – Featured in Artificial Intelligence Disclosure & Acknowledgments.
-  - **Om Nom Yawning *(Media Reserve / Backlog)*:** [Yawn Om Nom (Bored / Falling Asleep)](https://tenor.com/view/yawn-om-nom-cut-the-rope-bored-falling-asleep-gif-26818518) – Stored in `assets/docs/om_nom_yawn.gif` as a reserved visual asset ready to be linked when documentation expands to cover idle timeout / sleep mechanics.
+  Character animation GIFs of Om Nom were sourced from [Tenor.com](https://tenor.com/) and adapted for documentation showcases and reactive visual feedback under non-commercial editorial sharing terms.
+
+<details>
+<summary><b>📋 Click to expand full Tenor GIF sources & credits (15 links)</b></summary>
+
+<br>
+
+| | Animation | Tenor Link | | Animation | Tenor Link |
+| :---: | :--- | :--- | :---: | :--- | :--- |
+| 👏 | Clapping | [Tenor](https://tenor.com/view/clapping-om-nom-om-nom-stories-excited-thrilled-gif-9984157943214291792) | 🤔 | Thinking | [Tenor](https://tenor.com/view/thinking-om-nom-cut-the-rope-considering-pondering-gif-26818523) |
+| 🍬 | Feed Me | [Tenor](https://tenor.com/view/cut-the-rope-feedme-hungry-gif-11675089) | 🧠 | Brain Power | [Tenor](https://tenor.com/view/thinking-om-nom-om-nom-stories-using-all-my-brain-power-cut-the-rope-gif-10209083612735057102) |
+| 😲 | Surprised | [Tenor](https://tenor.com/view/surprised-om-nom-om-nelle-cut-the-rope-omg-gif-1819623925838053034) | 🚶 | Marching | [Tenor](https://tenor.com/view/marching-om-nom-cut-the-rope-walking-exersicing-gif-14381300523123868607) |
+| 😤 | Mad | [Tenor](https://tenor.com/view/mad-om-nom-om-nom-and-cut-the-rope-angry-annoyed-gif-24898606) | 🙅 | Shaking Head | [Tenor](https://tenor.com/view/shaking-my-head-om-nom-om-nom-and-cut-the-rope-smh-no-gif-25538657) |
+| 😮 | Jaw Dropping | [Tenor](https://tenor.com/view/jaw-dropping-om-nom-nibble-nom-cut-the-rope-impressed-gif-8249317190795755440) | 😱 | Freaking Out | [Tenor](https://tenor.com/view/freaking-out-om-nom-cut-the-rope-screaming-going-crazy-gif-3927534681297224760) |
+| 🎉 | Excited | [Tenor](https://tenor.com/view/excited-om-nom-om-nom-stories-om-nom-and-cut-the-rope-happy-gif-26647750) | 🤩 | Wow | [Tenor](https://tenor.com/view/wow-om-nom-cut-the-rope-that's-amazing-i-love-this-gif-12346611675352339536) |
+| 🥊 | Ready to Fight | [Tenor](https://tenor.com/view/ready-to-fight-om-nom-om-nom-stories-fighting-stance-ready-to-brawl-gif-8029144922046973558) | 💋 | Kiss | [Tenor](https://tenor.com/view/kiss-on-the-cheek-om-nom-om-nom-stories-love-you-cut-the-rope-gif-17615010227572962049) |
+| 😴 | Yawn *(Reserve)* | [Tenor](https://tenor.com/view/yawn-om-nom-cut-the-rope-bored-falling-asleep-gif-26818518) | | | |
+
+</details>
 
 - **Animated Controls & Interaction Icons:**
   - `assets/docs/controls_left_click.gif`, `assets/docs/controls_right_click.gif`, and `assets/docs/controls_cursor.gif`: Sourced from master vectors designed by **[Smashicons from Flaticon](https://www.flaticon.com/authors/smashicons)** under *Free for commercial use WITH ATTRIBUTION* license (Licensee: Angel Beltran, 19 Oct 2026). Rendered directly from vector paths with super-sampled antialiasing and procedural keyframe animations simulating tactile click bounce, dynamic velocity tilt, trailing particle ribbons, shockwave burst ripples, and blade swipe trail effects.
