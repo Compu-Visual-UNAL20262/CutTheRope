@@ -1,7 +1,7 @@
 
 /**
  * src/entities/Target.js
- * Monster and win sensor.
+ * Monster and winning sensor.
  */
 
 class Target {
@@ -18,7 +18,17 @@ class Target {
       isSensor: true
     });
 
+    this.support = Matter.Bodies.rectangle(
+      x,
+      y + radius,
+      radius * 3,
+      20,
+      { isStatic: true }
+    );
+
     this.body.gameObject = this;
+    this.support.gameObject = this;
+    this.physicsWorld.addBody(this.support);
     this.physicsWorld.addBody(this.body);
   }
 
@@ -27,16 +37,26 @@ class Target {
 
     const dx = candy.body.position.x - this.body.position.x;
     const dy = candy.body.position.y - this.body.position.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
 
-    // Abre la boca cuando el dulce se acerca.
-    this.mouthOpen = Math.sqrt(dx * dx + dy * dy) < DETECTION_RADIUS;
+    if (distance < DETECTION_RADIUS) {
+      this.mouthOpen = true;
+    } else {
+      this.mouthOpen = false;
+    }
   }
 
   render() {
     const { x, y } = this.body.position;
+    const { x: supX, y: supY } = this.support.position;
 
     push();
     noStroke();
+
+    // Soporte provisional.
+    fill(255, 0, 0);
+    rectMode(CENTER);
+    rect(supX, supY, this.radius * 3, 20);
 
     // Cuerpo provisional del monstruo
     fill(100, 205, 75);
@@ -63,7 +83,7 @@ class Target {
   }
 
   onCollide(other) {
-    if (!other || other.type !== 'candy') return;
+    if (this.reached || !other || other.type !== 'candy') return;
 
     this.reached = true;
     this.mouthOpen = true;

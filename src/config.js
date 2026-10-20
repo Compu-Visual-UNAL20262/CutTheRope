@@ -4,11 +4,11 @@
  * Responsibility: Ángel & Farid [BASE]
  */
 
-const CONFIG = {
+ const CONFIG = {
   // Proportional vertical resolution for Cut the Rope (Aspect Ratio 2:3, classic 320x480 / 640x960)
   CANVAS_WIDTH: 480,
   CANVAS_HEIGHT: 720,
-  GRAVITY_Y: 1.0,
+  GRAVITY_Y: 0.01,
 
   LABELS: {
     CANDY: 'CANDY',
@@ -27,42 +27,47 @@ const CONFIG = {
   }
 };
 
-// Global scope export for compatibility across scripts and modules
+// Entities-related constants
+ const CANDY_RADIUS = 18
+ const TARGET_RADIUS = 42
+ const DETECTION_RADIUS = 120
+ const STAR_RADIUS = 13
+
+ const OMNOM_SPRITES = {
+  idle: {
+    frames: [
+      {x:394, y:1864, w:130, h:150},
+      {x:394, y:1864, w:130, h:150},
+      {x:394, y:1561, w:130, h:150},
+    ],
+    frameRate: 8,
+    loop: true
+  },
+
+  waitingCandy: {
+    frames: [
+      {x:128, y:272, w:130, h:145},
+      {x:128, y:417, w:130, h:140},
+      {x:128, y:554, w:130, h:140},
+    ],
+    frameRate: 12,
+    loop: false
+  }
+};
+
+//  const STAR_SPRITES = {
+//   spin: {
+//     frames: [
+//       // Los 10 frames de la estrella
+//     ],
+//     frameRate: 10,
+//     loop: true
+//   }
+// };
+
+
+// Global scope  for compatibility across scripts and modules
 if (typeof window !== 'undefined') {
   window.CONFIG = CONFIG;
 
-  // Safe patch for p5.prototype.loadImage to support offline file:/// protocol without CORS blockage
-  if (typeof p5 !== 'undefined' && p5.prototype && p5.prototype.loadImage) {
-    const _origP5LoadImage = p5.prototype.loadImage;
-    p5.prototype.loadImage = function(path, successCallback, failureCallback) {
-      // If path is a data URI, standard p5 can process it or native Image
-      const img = this.createImage ? this.createImage(1, 1) : (new p5.Image(1, 1, this));
-      const nativeImg = new Image();
-      img.elt = nativeImg;
-
-      nativeImg.onload = () => {
-        img.width = nativeImg.naturalWidth;
-        img.height = nativeImg.naturalHeight;
-        if (img.canvas) {
-          img.canvas.width = nativeImg.naturalWidth;
-          img.canvas.height = nativeImg.naturalHeight;
-          if (img.drawingContext) {
-            img.drawingContext.drawImage(nativeImg, 0, 0);
-          }
-        }
-        img.modified = true;
-        if (typeof successCallback === 'function') successCallback(img);
-      };
-
-      nativeImg.onerror = (err) => {
-        if (typeof failureCallback === 'function') failureCallback(err);
-      };
-
-      nativeImg.src = path;
-      return img;
-    };
-  }
-}
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { CONFIG };
 }
