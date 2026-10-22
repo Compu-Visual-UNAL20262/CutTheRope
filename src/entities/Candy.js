@@ -10,13 +10,14 @@ class Candy {
     this.radius = radius;
     this.type = 'candy';
     this.sprites = sprites;
+    this.eaten = false;
 
     this.body = Matter.Bodies.circle(x, y, radius, {
       label: CONFIG.LABELS.CANDY,
       restitution: 0.25,
       friction: 0.1,
-      frictionAir: 0.005,
-      density: 0.002,
+      frictionAir: 0.001,
+      density: 0.02,
       collisionFilter: {
         category: CONFIG.COLLISION_CATEGORIES.CANDY,
         mask: 0xFFFF
@@ -30,10 +31,11 @@ class Candy {
     this.mascara = createGraphics(radius, radius);
     this.mascara.fill(0);  
     this.mascara.noStroke();
-    this.mascara.circle(radius/ 2, radius / 2, radius);
+    this.mascara.circle(radius/2, radius/2, MASCARA_RADIUS);
   }
 
   render() {
+    if (this.eaten) { return };
     const { x, y } = this.body.position;
 
     push();
@@ -43,10 +45,15 @@ class Candy {
     imageMode(CENTER);
     for (let i = 0; i < CANDY_SPRITES.length; i++){
       this.sprites[i].mask(this.mascara.get());
-      image(this.sprites[i], 0, 0, this.radius, this.radius);
+      image(this.sprites[i], 0, 0, this.radius*2, this.radius*2);
     }
 
     pop();
+  }
+
+  delete(){
+    this.physicsWorld.removeBody(this.body);
+    this.eaten = true;
   }
 
   onCollide(other) {

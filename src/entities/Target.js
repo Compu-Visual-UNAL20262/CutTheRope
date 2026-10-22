@@ -14,33 +14,44 @@ class Target {
 
     this.body = Matter.Bodies.circle(x, y, radius, {
       label: CONFIG.LABELS.TARGET,
+      isStatic:true,
     });
 
     this.support = Matter.Bodies.rectangle(
       x,
-      y + radius*1.25,
-      radius * 3,
+      y + radius,
+      radius,
       5,
       { isStatic: true }
     );
 
     this.body.gameObject = this;
-    this.support.gameObject = this;
     this.physicsWorld.addBody(this.support);
     this.physicsWorld.addBody(this.body);
   }
 
-  update(candy) {
-    if (!candy || this.reached) return;
+  update(candy, ) {
+    if (this.reached) {
+      eatingAnimation.update();
+      return;
+    }
+
+    if (!candy) return;
 
     const dx = candy.body.position.x - this.body.position.x;
     const dy = candy.body.position.y - this.body.position.y;
     const distance = Math.sqrt(dx * dx + dy * dy);
 
     if (distance < DETECTION_RADIUS) {
+      if (!this.mouthOpen) {
+        openMouthAnimation.reset();
+      }
       this.mouthOpen = true;
+      openMouthAnimation.update();
     } else {
       this.mouthOpen = false;
+      openMouthAnimation.reset();
+      idleAnimation.update();
     }
   }
 
@@ -51,29 +62,17 @@ class Target {
     push();
     noStroke();
 
-    // Soporte provisional.
+    // Support
     imageMode(CENTER);
-    image(supportSprite[0], supX, supY, supportSprite[0].width, supportSprite[0].height);
+    image(supportSprite, supX, supY-this.radius/4, supportSprite.width, supportSprite.height);
 
-    // Cuerpo provisional del monstruo
-    fill(100, 205, 75);
-    circle(x, y, this.radius * 2);
-
-    // Ojos
-    fill(255);
-    circle(x - 13, y - 8, 15);
-    circle(x + 13, y - 8, 15);
-
-    fill(25);
-    circle(x - 12, y - 7, 6);
-    circle(x + 14, y - 7, 6);
-
-    // Boca
-    fill(35);
-    if (this.mouthOpen) {
-      ellipse(x, y + 13, 25, 23);
+    // OmNom
+    if (this.mouthOpen && !this.reached) {
+      openMouthAnimation.draw(x, y, this.radius*2, this.radius*2);
+    } else if (this.reached) {
+      eatingAnimation.draw(x, y, this.radius*2, this.radius*2);
     } else {
-      ellipse(x, y + 14, 20, 5);
+      idleAnimation.draw(x, y, this.radius*2, this.radius*2);
     }
 
     pop();
@@ -84,5 +83,6 @@ class Target {
 
     this.reached = true;
     this.mouthOpen = true;
+    eatingAnimation.reset();
   }
 }

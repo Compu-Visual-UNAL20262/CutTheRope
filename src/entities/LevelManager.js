@@ -3,7 +3,7 @@
  * src/entities/LevelManager.js
  * Builds each level.
  */
-
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 class LevelManager {
   constructor(physicsWorld) {
     this.physicsWorld = physicsWorld;
@@ -73,7 +73,7 @@ class LevelManager {
     }
   }
 
-  render() {
+  async render() {
     // Dibujar primero las cuerdas.
     for (const rope of this.ropes) {
       if (rope && typeof rope.render === 'function') {
@@ -82,8 +82,8 @@ class LevelManager {
     }
 
     // Actualizar la expresión del monstruo.
-    if (this.target && this.candy) {
-      this.target.update(this.candy);
+    if (this.target) {
+      this.target.update(this.candy, deltaTime);
       this.target.render();
     }
 
@@ -100,6 +100,10 @@ class LevelManager {
     // Notificar la victoria una sola vez.
     if (this.target && this.target.reached && !this.winNotified) {
       this.winNotified = true;
+      this.candy.delete();
+      while (!eatingAnimation.isFinished) {
+        await sleep(500);
+      }
 
       if (
         typeof gameState !== 'undefined' &&
@@ -112,5 +116,16 @@ class LevelManager {
         }
       }
     }
+  }
+
+  click(){
+    this.candy.delete();
+    this.candy = new Candy(
+      this.physicsWorld,
+      mouseX,
+      mouseY,
+      candySprites
+    );
+    return
   }
 }

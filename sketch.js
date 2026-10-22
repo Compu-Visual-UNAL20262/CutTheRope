@@ -18,6 +18,10 @@ let entitiesAssets;
 let candySprites;
 let supportSprite;
 
+let idleAnimation;
+let openMouthAnimation;
+let eatingAnimation;
+
 function mousePressed() {
   // Si tienes una lista de dulces, recórrela. Si es uno solo, llámalo directamente:
   if (candy) {
@@ -228,7 +232,7 @@ function checkOutOfBounds() {
 
   const limitY = ((typeof CONFIG !== 'undefined' && CONFIG.CANVAS_HEIGHT) ? CONFIG.CANVAS_HEIGHT : 720) + 50;
 
-  if (candyY !== null && candyY > limitY) {
+  if ((candyY !== null && candyY > limitY)) {
     if (gameState && typeof gameState.setLost === 'function') {
       gameState.setLost();
     } else if (gameState && typeof gameState.changeState === 'function') {
@@ -316,4 +320,8 @@ function mouseReleased() {
   if (cutter && typeof cutter.onRelease === 'function') {
     cutter.onRelease();
   }
+}
+
+function keyPressed(){
+  levelManager.click();
 }

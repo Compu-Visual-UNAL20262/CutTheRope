@@ -16,7 +16,7 @@ class SpriteAnimation {
     this.finished = false;
   }
 
-  update(deltaTime) {
+  update(deltaTime=ANIMATION_TIME) {
     if (this.finished || this.frames.length <= 1) return;
 
     this.elapsed += deltaTime;
