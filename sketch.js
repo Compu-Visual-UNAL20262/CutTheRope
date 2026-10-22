@@ -16,6 +16,7 @@ let customCursor;
 let entitiesAssets;
 
 let candySprites;
+let supportSprite;
 
 function mousePressed() {
   // Si tienes una lista de dulces, recórrela. Si es uno solo, llámalo directamente:

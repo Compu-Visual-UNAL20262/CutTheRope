@@ -14,15 +14,13 @@ class Target {
 
     this.body = Matter.Bodies.circle(x, y, radius, {
       label: CONFIG.LABELS.TARGET,
-      isStatic: true,
-      isSensor: true
     });
 
     this.support = Matter.Bodies.rectangle(
       x,
-      y + radius,
+      y + radius*1.25,
       radius * 3,
-      20,
+      5,
       { isStatic: true }
     );
 
@@ -54,9 +52,8 @@ class Target {
     noStroke();
 
     // Soporte provisional.
-    fill(255, 0, 0);
-    rectMode(CENTER);
-    rect(supX, supY, this.radius * 3, 20);
+    imageMode(CENTER);
+    image(supportSprite[0], supX, supY, supportSprite[0].width, supportSprite[0].height);
 
     // Cuerpo provisional del monstruo
     fill(100, 205, 75);

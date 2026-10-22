@@ -28,7 +28,7 @@
 };
 
 // Entities-related constants
- const CANDY_RADIUS = 35
+ const CANDY_RADIUS = 50
  const TARGET_RADIUS = 42
  const DETECTION_RADIUS = 250
  const STAR_RADIUS = 13
@@ -60,6 +60,8 @@ const CANDY_SPRITES = [
   {x:146, y:2, w:97, h:97},
   {x:1, y:149, w:102, h:102}
 ]
+
+const SUPPORT_SPRITE = [{x:5, y:2, w:185, h:180}]
 
 //  const STAR_SPRITES = {
 //   spin: {

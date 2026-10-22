@@ -39,7 +39,7 @@ class LevelManager {
     this.target = new Target(
     this.physicsWorld,
     centerX,
-    h-90);
+    h-110);
 
     const starPositions = [
       { x: centerX - 85, y: 270 },
