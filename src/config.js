@@ -8,7 +8,7 @@
   // Proportional vertical resolution for Cut the Rope (Aspect Ratio 2:3, classic 320x480 / 640x960)
   CANVAS_WIDTH: 480,
   CANVAS_HEIGHT: 720,
-  GRAVITY_Y: 0.01,
+  GRAVITY_Y: 0.1,
 
   LABELS: {
     CANDY: 'CANDY',
@@ -28,9 +28,9 @@
 };
 
 // Entities-related constants
- const CANDY_RADIUS = 18
+ const CANDY_RADIUS = 35
  const TARGET_RADIUS = 42
- const DETECTION_RADIUS = 120
+ const DETECTION_RADIUS = 250
  const STAR_RADIUS = 13
 
  const OMNOM_SPRITES = {
@@ -54,6 +54,12 @@
     loop: false
   }
 };
+
+const CANDY_SPRITES = [
+  {x:11, y:2, w:102, h:102},
+  {x:146, y:2, w:97, h:97},
+  {x:1, y:149, w:102, h:102}
+]
 
 //  const STAR_SPRITES = {
 //   spin: {

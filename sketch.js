@@ -13,6 +13,9 @@ let particleSystem;
 let levelManager;
 let cutter;
 let customCursor;
+let entitiesAssets;
+
+let candySprites;
 
 function mousePressed() {
   // Si tienes una lista de dulces, recórrela. Si es uno solo, llámalo directamente:
@@ -30,15 +33,18 @@ function mouseReleased() {
 /**
  * 1. PRELOAD: Decentralized asset loading per team member
  */
-function preload() {
+async function preload() {
   if (typeof CustomCursor !== 'undefined' && typeof CustomCursor.preload === 'function') {
     CustomCursor.preload();
   }
   if (typeof MechanicsAssets !== 'undefined' && typeof MechanicsAssets.preload === 'function') {
     MechanicsAssets.preload();
   }
-  if (typeof EntitiesAssets !== 'undefined' && typeof EntitiesAssets.preload === 'function') {
-    EntitiesAssets.preload();
+
+  entitiesAssets = new EntitiesAssets();
+
+  if (typeof EntitiesAssets !== 'undefined' && typeof entitiesAssets.preload === 'function') {
+    await entitiesAssets.preload();
   }
   if (typeof UIAssets !== 'undefined' && typeof UIAssets.preload === 'function') {
     UIAssets.preload();
@@ -48,9 +54,10 @@ function preload() {
 /**
  * 2. SETUP: Canvas, physics engine, and coordinator initialization
  */
-function setup() {
-  const w = (typeof CONFIG !== 'undefined' && CONFIG.CANVAS_WIDTH) ? CONFIG.CANVAS_WIDTH : 480;
-  const h = (typeof CONFIG !== 'undefined' && CONFIG.CANVAS_HEIGHT) ? CONFIG.CANVAS_HEIGHT : 720;
+async function setup() {
+  await preload();
+  const w = CONFIG.CANVAS_WIDTH;
+  const h = CONFIG.CANVAS_HEIGHT;
 
   const canvas = createCanvas(w, h);
   const container = document.getElementById('game-container');
@@ -98,6 +105,7 @@ function setup() {
   if (typeof CustomCursor !== 'undefined') {
     customCursor = new CustomCursor();
   }
+
 }
 
 /**

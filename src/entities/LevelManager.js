@@ -16,6 +16,7 @@ class LevelManager {
     this.currentLevel = 1;
     this.collectedStars = 0;
     this.winNotified = false;
+    this.candy_sprites = candySprites;
   }
 
   loadLevel(index = 1) {
@@ -32,15 +33,13 @@ class LevelManager {
       this.physicsWorld,
       centerX-50,
       130,
-      18
+      candySprites
     );
 
     this.target = new Target(
-      this.physicsWorld,
-      centerX,
-      h - 90,
-      42
-    );
+    this.physicsWorld,
+    centerX,
+    h-90);
 
     const starPositions = [
       { x: centerX - 85, y: 270 },
