@@ -86,10 +86,18 @@ const UIAssets = {
   apptivityStars: null,
   menuCandySwirl: null,
   loaded: false,
+  star: null,
+  startranslucent: null,
+  audiooff: null,
+  audioon: null,
 
   preload() {
     this.menuBgr = loadSafeImage('menuBgr', 'assets/ui/menu_bgr_opt.jpg');
     this.menuShadow = loadSafeImage('menuShadow', 'assets/ui/menu_shadow.png');
+    this.star = loadSafeImage('star', 'assets/ui/golden_star.png');
+    this.startranslucent = loadSafeImage('startranslucent', 'assets/ui/translucent_star.png');
+    this.audiooff = loadSafeImage('noaudio', 'assets/ui/no_audio.png');
+    this.audioon = loadSafeImage('audio_active', 'assets/ui/audio_activo.png');
     this.btnNormal = loadSafeImage('btnNormal', 'assets/ui/btn_default_normal.png');
     this.btnPressed = loadSafeImage('btnPressed', 'assets/ui/btn_default_pressed.png');
     this.omnomIdle = loadSafeImage('omnomIdle', 'assets/ui/omnom_idle.png');
@@ -124,6 +132,12 @@ class UIManager {
       h: 53,
       isHovered: false,
       isPressed: false
+    };
+
+    this.audioButton = {
+      x: 0,
+      y: 0,
+      size: 38
     };
 
     // Ensure assets are initialized
@@ -489,18 +503,121 @@ class UIManager {
     pop();
   }
 
+  drawStarCounter() {
+  const collected = this.levelManager?.collectedStars ?? 0;
+  const total = 3;
+
+  const starSize = 60;
+  const gap = 8;
+  const startX = width - 150 - total * starSize - (total - 1) * gap;
+  const y = 30;
+
+  for (let i = 0; i < total; i++) {
+    const x = startX + i * (starSize + gap);
+
+    if (UIAssets.star?.isReady) {
+      drawingContext.save();
+      drawingContext.globalAlpha = i < collected ? 1 : 0.35;
+
+      drawSafe(
+        UIAssets.star,
+        x,
+        y,
+        starSize,
+        starSize,
+        false
+      );
+
+      
+
+      drawingContext.restore();
+    } else {
+      push();
+      textAlign(CENTER, CENTER);
+      textSize(starSize);
+      noStroke();
+      fill(i < collected ? color(255, 215, 50) : color(130));
+      text("★", x + starSize / 2, y + starSize / 2);
+      pop();
+    }
+  }
+}
+
+drawAudioButton() {
+  const btn = this.audioButton;
+
+  // Posición en la esquina superior derecha
+  btn.x = width - 28 - btn.size / 2;
+  btn.y = 28 + btn.size / 2;
+
+  const isMuted = this.audioManager?.isMuted ?? false;
+
+  const sprite = isMuted
+    ? UIAssets.audiooff
+    : UIAssets.audioon;
+
+  push();
+
+
+  stroke(121, 85, 63);
+  strokeWeight(2);
+  fill(227, 206, 190);
+  circle(btn.x, btn.y, btn.size);
+
+  if (sprite?.isReady) {
+    drawSafe(
+      sprite,
+      btn.x,
+      btn.y,
+      btn.size * 0.65,
+      btn.size * 0.65,
+      true
+    );
+
+  } else {
+    noStroke();
+    fill(75, 45, 25);
+    textAlign(CENTER, CENTER);
+    textSize(18);
+    text(isMuted ? "X" : "♪", btn.x, btn.y);
+  }
+
+  pop();
+}
+
+
   /**
    * 4. HUD during gameplay
    */
   drawHUD() {
-    push();
-    fill(255);
-    noStroke();
-    textAlign(LEFT, TOP);
-    textSize(18);
-    textStyle(BOLD);
-    text('Level 1', 20, 20);
-    pop();
+  const level = this.levelManager?.currentLevel ?? 1;
+
+  push();
+
+  textFont("Fredoka");
+  textStyle(BOLD);
+  textSize(22);
+  textAlign(LEFT, TOP);
+
+  // Shadow
+  noStroke();
+  fill(0, 0, 0, 180);
+  text(`LEVEL ${level}`, 22, 22);
+
+  // Text
+  fill(255, 255, 255);
+  stroke(95, 55, 25);
+  strokeWeight(3);
+  text(`LEVEL ${level}`, 20, 19);
+
+  //Stars collected
+  this.drawStarCounter();
+
+  //Audio manager
+  this.drawAudioButton();
+
+
+  pop();
   }
 
   /**
@@ -569,6 +686,19 @@ class UIManager {
       if (this.gameState && typeof this.gameState.changeState === 'function') {
         this.gameState.changeState('PLAYING');
       }
+      return true;
+    }
+
+    const btn = this.audioButton;
+
+    const dx = x - btn.x;
+    const dy = y - btn.y;
+
+    if (dx * dx + dy * dy <= (btn.size / 2) ** 2) {
+      if (this.audioManager) {
+        this.audioManager.toggleMute();
+      }
+
       return true;
     }
 
