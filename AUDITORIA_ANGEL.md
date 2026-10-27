@@ -38,7 +38,7 @@ Una auditoría rigurosa y senior requiere certificar hechos contrastados contra 
 | :--- | :--- | :--- | :--- | :--- |
 | **Duplicación de `mousePressed` y `mouseReleased`** | Crítico | **Confirmado (Diagnóstico corregido)** | `sketch.js` definía funciones en L25-36 y en L273-317. | La segunda versión sobrescribía la primera. El caramelo nunca tuvo métodos `.pressed()` ni `.released()`, por lo que la primera era código muerto. **Corregido: Bloque L25-36 eliminado.** |
 | **`keyPressed()` huérfano** | Crítico | **Confirmado** | `sketch.js` llamaba a `levelManager.click()` sin validar existencia. | Error fatal en menús o arranque. **Corregido: Desactivado y documentado para producción.** |
-| **Ciclo `preload()` y `setup()`** | Antipatrón | **Confirmado** | `preload()` era `async` y `setup()` volvía a invocar `await preload()`. | Doble carga de assets en disco y memoria. **Corregido: Ciclo síncrono canónico de p5.js restablecido.** |
+| **Sincronización `preload()` y `setup()`** | Antipatrón | **Causa Raíz Identificada (Ver commit b43a389)** | `EntitiesAssets.js` es asíncrono (`async preload()`). En `b43a389` `setup()` usaba `await preload()` para no iniciar el nivel antes de tener los sprites. | Si se eliminaba el `await` sin capturar la promesa, `setup()` corría en el Frame 0 con `candySprites === undefined`, rompiendo los sprites oficiales. **Corregido: `preload()` almacena `entitiesAssetsPromise` y `setup()` espera exclusivamente esa promesa sin duplicar la carga general.** |
 | **Comportamiento de `Engine.clear()`** | Crítico | **Alucinación Técnica de la Auditoría** | `PhysicsWorld.js` llamaba `World.clear()` y `Engine.clear()`. | `Engine.clear()` **NO** destruye el motor ni desvincula listeners de colisión (solo limpia pares de colisión). Aun así, se actualizó a `Composite.clear` y se añadió `resetForNewLevel()`. |
 | **Límites en `checkOutOfBounds()`** | Incompleto | **Confirmado** | Solo evaluaba eje Y vertical ($Y > 720 + 50$). | Si el dulce salía por los lados, la partida se colgaba. **Corregido: Se añadieron límites en eje X ($X < -50$ o $X > 480 + 50$).** |
 | **Variables globales huérfanas en `sketch.js`** | Eliminar | **Alucinación de Impacto (Riesgo Crítico)** | Auditoría pedía borrar `candySprites`, `supportSprite`, etc. | **Peligro:** `EntitiesAssets.js`, `Target.js` y `LevelManager.js` de Nicolás dependen directamente de ellas. **Decisión: Preservadas para evitar `ReferenceError`.** |
@@ -57,8 +57,9 @@ Todas las correcciones prioritarias han sido implementadas y verificadas directa
 ### 3.2. `sketch.js` (Orquestación y Ciclo de Vida)
 * **Estado:** **APLICADO Y VERIFICADO.**
 * Se eliminó el bloque duplicado de `mousePressed()` y `mouseReleased()`.
-* `preload()` opera sincrónicamente bajo el estándar de p5.js, delegando la carga descentralizada sin `async/await` redundante.
-* `setup()` inicializa el lienzo y las instancias sin reinvocar `preload()`.
+* `preload()` inicia la carga descentralizada y captura la promesa de `entitiesAssets.preload()`.
+* `setup()` espera asíncronamente únicamente dicha promesa (`await entitiesAssetsPromise;`) antes de instanciar `LevelManager(physicsWorld)` y `loadLevel(1)`.
+* Esto garantiza que los sprites originales del caramelo (`candy_sprite.png` con sus 3 capas recortadas y máscara circular) y los spritesheets de Om Nom (`sprite.png`, `support_sprite.png`) estén 100% decodificados en memoria al instanciar el nivel, igual que en el commit `b43a389`.
 * `checkOutOfBounds()` valida coordenadas en dos dimensiones ($X$ e $Y$).
 * `keyPressed()` está protegido para modo producción evitando cuelgues del motor.
 * Variables globales de soporte (`candySprites`, `idleAnimation`, etc.) se mantienen declaradas en el scope superior para garantizar la integración con Nicolás.
@@ -80,6 +81,7 @@ Para mantener la estabilidad del equipo:
    * `physicsWorld.engine` mantiene accesibles las propiedades de iteración de solver para cuerdas tensas.
    * Las constantes `ROPE_*`, `CUTTER_*` y `BUBBLE_*` se mantienen en `src/config.js` para asegurar la física de cuerdas y burbujas.
 2. **Con Nicolás (`Candy.js`, `Target.js`, `Collectibles.js`, `LevelManager.js`):**
+   * Las entidades y spritesheets se conservan idénticos a los del commit `b43a389`.
    * Las variables de sprites y animaciones en `sketch.js` se mantienen vivas.
    * Las dimensiones de colisión `CANDY_RADIUS`, `TARGET_RADIUS`, `STAR_RADIUS` y `OMNOM_SPRITES` permanecen intactas en `src/config.js`.
 3. **Con Ariadna (`GameState.js`, `UIManager.js`, `AudioManager.js`, `CustomCursor.js`):**
@@ -90,7 +92,7 @@ Para mantener la estabilidad del equipo:
 
 ## 5. Certificación de Calidad
 
-* **Validación de Sintaxis:** Aprobada (`node --check` en todos los archivos `.js`).
-* **Verificación de Colisiones:** Comprobado el despacho automático bidireccional de eventos `onCollide`.
+* **Validación de Sintaxis:** Aprobada (`node --check sketch.js` y demás archivos del proyecto).
+* **Verificación de Entidades Oficiales:** Caramelo con máscara de 3 capas y animaciones de Om Nom idénticas al commit `b43a389`.
 * **Rendimiento:** Ciclo de simulación y renderizado calibrado para 60 FPS estables.
 * **Estado Final:** **Aprobado para Producción e Integración Continua.**

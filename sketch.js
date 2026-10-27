@@ -25,7 +25,7 @@ let eatingAnimation;
 /**
  * 1. PRELOAD: Decentralized asset loading per team member
  */
-function preload() {
+async function preload() {
   if (typeof CustomCursor !== 'undefined' && typeof CustomCursor.preload === 'function') {
     CustomCursor.preload();
   }
@@ -36,7 +36,7 @@ function preload() {
   entitiesAssets = new EntitiesAssets();
 
   if (typeof EntitiesAssets !== 'undefined' && typeof entitiesAssets.preload === 'function') {
-    entitiesAssets.preload();
+    await entitiesAssets.preload();
   }
   if (typeof UIAssets !== 'undefined' && typeof UIAssets.preload === 'function') {
     UIAssets.preload();
@@ -46,7 +46,8 @@ function preload() {
 /**
  * 2. SETUP: Canvas, physics engine, and coordinator initialization
  */
-function setup() {
+async function setup() {
+  await preload();
   const w = CONFIG.CANVAS_WIDTH;
   const h = CONFIG.CANVAS_HEIGHT;
 
