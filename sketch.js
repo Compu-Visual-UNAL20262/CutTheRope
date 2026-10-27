@@ -22,23 +22,10 @@ let idleAnimation;
 let openMouthAnimation;
 let eatingAnimation;
 
-function mousePressed() {
-  // Si tienes una lista de dulces, recórrela. Si es uno solo, llámalo directamente:
-  if (candy) {
-    candy.pressed();
-  }
-}
-
-function mouseReleased() {
-  if (candy) {
-    candy.released();
-  }
-}
-
 /**
  * 1. PRELOAD: Decentralized asset loading per team member
  */
-async function preload() {
+function preload() {
   if (typeof CustomCursor !== 'undefined' && typeof CustomCursor.preload === 'function') {
     CustomCursor.preload();
   }
@@ -49,7 +36,7 @@ async function preload() {
   entitiesAssets = new EntitiesAssets();
 
   if (typeof EntitiesAssets !== 'undefined' && typeof entitiesAssets.preload === 'function') {
-    await entitiesAssets.preload();
+    entitiesAssets.preload();
   }
   if (typeof UIAssets !== 'undefined' && typeof UIAssets.preload === 'function') {
     UIAssets.preload();
@@ -59,8 +46,7 @@ async function preload() {
 /**
  * 2. SETUP: Canvas, physics engine, and coordinator initialization
  */
-async function setup() {
-  await preload();
+function setup() {
   const w = CONFIG.CANVAS_WIDTH;
   const h = CONFIG.CANVAS_HEIGHT;
 
@@ -219,20 +205,27 @@ function draw() {
  * Verifies if the candy fell below the canvas viewport to trigger defeat.
  */
 function checkOutOfBounds() {
-  let candyY = null;
+  let candyPos = null;
 
   // Retrieve candy position from LevelManager or global reference
   if (levelManager && levelManager.candy) {
     if (levelManager.candy.body && levelManager.candy.body.position) {
-      candyY = levelManager.candy.body.position.y;
-    } else if (typeof levelManager.candy.y === 'number') {
-      candyY = levelManager.candy.y;
+      candyPos = levelManager.candy.body.position;
+    } else if (typeof levelManager.candy.x === 'number' && typeof levelManager.candy.y === 'number') {
+      candyPos = { x: levelManager.candy.x, y: levelManager.candy.y };
     }
   }
 
-  const limitY = ((typeof CONFIG !== 'undefined' && CONFIG.CANVAS_HEIGHT) ? CONFIG.CANVAS_HEIGHT : 720) + 50;
+  if (!candyPos) return;
 
-  if ((candyY !== null && candyY > limitY)) {
+  const limitW = (typeof CONFIG !== 'undefined' && CONFIG.CANVAS_WIDTH) ? CONFIG.CANVAS_WIDTH : 480;
+  const limitH = (typeof CONFIG !== 'undefined' && CONFIG.CANVAS_HEIGHT) ? CONFIG.CANVAS_HEIGHT : 720;
+  const margin = 50;
+
+  const outY = candyPos.y > limitH + margin;
+  const outX = candyPos.x < -margin || candyPos.x > limitW + margin;
+
+  if (outY || outX) {
     if (gameState && typeof gameState.setLost === 'function') {
       gameState.setLost();
     } else if (gameState && typeof gameState.changeState === 'function') {
@@ -322,6 +315,8 @@ function mouseReleased() {
   }
 }
 
-function keyPressed(){
-  levelManager.click();
+function keyPressed() {
+  // Production mode: disabled to prevent accidental restarts or unhandled exceptions.
+  // Uncomment only for local testing:
+  // if (levelManager && typeof levelManager.click === 'function') levelManager.click();
 }
