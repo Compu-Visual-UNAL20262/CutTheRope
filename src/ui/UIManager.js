@@ -121,7 +121,9 @@ class UIManager {
 
     // Loading screen state (calibrated for ~3.3s smooth load time, +1s longer)
     this.loadingProgress = 0;
-    this.loadingSpeed = 1;
+    this.loadingSpeed = (typeof CONFIG !== 'undefined' && CONFIG.LOADING_SPEED !== undefined)
+      ? CONFIG.LOADING_SPEED
+      : 0.005;
     this.fadeAlpha = 0;
 
     // Main Menu Start button bounding box (proportional to 455x102 sprite)
