@@ -147,6 +147,19 @@ const SUPPORT_SPRITE = [{x:5, y:2, w:185, h:180}]
 //   }
 // };
 
+const ROPE_DEFAULT_SEGMENTS = 8;
+const ROPE_SEGMENT_LENGTH = 28.5;
+const ROPE_NODE_RADIUS = 4;
+const ROPE_PIN_RADIUS = 10;
+const ROPE_STIFFNESS = 1.0;
+const ROPE_DAMPING = 0.0;
+const ROPE_FADE_SPEED = 6;
+
+const CUTTER_MAX_TRAIL = 14;
+const CUTTER_TRAIL_DECAY = 0.12;
+const CUTTER_BLADE_WIDTH = 9;
+const CUTTER_HIT_RADIUS = 5;
+
 
 // Global scope  for compatibility across scripts and modules
 if (typeof window !== 'undefined') {
