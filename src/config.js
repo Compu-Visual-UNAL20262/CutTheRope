@@ -160,6 +160,11 @@ const CUTTER_TRAIL_DECAY = 0.12;
 const CUTTER_BLADE_WIDTH = 9;
 const CUTTER_HIT_RADIUS = 5;
 
+const BUBBLE_RADIUS = 34;
+const BUBBLE_BUOYANCY_FACTOR = 1.85;
+const BUBBLE_AIR_FRICTION = 0.045;
+const BUBBLE_MAX_UPWARD_SPEED = 4.2;
+
 
 // Global scope  for compatibility across scripts and modules
 if (typeof window !== 'undefined') {

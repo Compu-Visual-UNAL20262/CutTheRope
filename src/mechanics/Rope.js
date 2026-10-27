@@ -11,10 +11,11 @@ class Rope {
    * @param {Matter.Body|Object|null} [candyBody=null] - Target candy Matter.Body (or Candy entity)
    * @param {PhysicsWorld|null} [world=null] - Optional PhysicsWorld instance (defaults to global physicsWorld)
    */
-  constructor(pinX, pinY, segments = ROPE_DEFAULT_SEGMENTS, candyBody = null, world = null) {
+  constructor(pinX, pinY, segments, candyBody = null, world = null) {
     this.pinX = pinX;
     this.pinY = pinY;
-    this.segments = Math.max(2, segments || ROPE_DEFAULT_SEGMENTS);
+    const defaultSegs = typeof ROPE_DEFAULT_SEGMENTS !== 'undefined' ? ROPE_DEFAULT_SEGMENTS : 8;
+    this.segments = Math.max(2, segments || defaultSegs);
 
     // Resolve PhysicsWorld wrapper
     this.physicsWorld = world || (typeof physicsWorld !== 'undefined' ? physicsWorld : null);

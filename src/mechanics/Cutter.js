@@ -43,6 +43,13 @@ class Cutter {
   onPress(x, y) {
     if (!this.isPlayingState()) return;
 
+    // If the user clicked on an active captured Bubble, pop it instead of starting a cut
+    if (typeof Bubble !== 'undefined' && typeof Bubble.handleGlobalClick === 'function') {
+      if (Bubble.handleGlobalClick(x, y)) {
+        return;
+      }
+    }
+
     this.isSlicing = true;
     this.prevX = x;
     this.prevY = y;
