@@ -37,6 +37,8 @@ class LevelManager {
     this.airCushions = [];
     this.stars = [];
     this.ropes = [];
+
+    Star.nextSoundIndex = 0;
   }
 
   loadLevel(index) {

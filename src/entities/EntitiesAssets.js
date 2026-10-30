@@ -4,6 +4,7 @@ class EntitiesAssets {
         this.supportImg = null;
         this.starImg=null;
         this.omNomImg = null;
+        this.starSounds = [];
 
         this.mascara = createGraphics(CANDY_RADIUS, CANDY_RADIUS);
         this.mascara.fill(0);  
@@ -12,6 +13,8 @@ class EntitiesAssets {
     }
 
     async preload(){
+        this.preloadStarSounds();
+
         this.candyImg = await loadImage('assets/entities/candy_sprite.png');
         candySprites = CANDY_SPRITES.map(({ x, y, w, h }) => this.candyImg.get(x, y, w, h));
         for (let i = 0; i < CANDY_SPRITES.length; i++){
@@ -35,5 +38,14 @@ class EntitiesAssets {
         openMouthAnimation = new SpriteAnimation(openMouthOnNomSprites, OMNOM_SPRITES.openMouth.frameRate, OMNOM_SPRITES.openMouth.loop);
         eatingAnimation = new SpriteAnimation(eatingOnNomSprites, OMNOM_SPRITES.eating.frameRate, OMNOM_SPRITES.eating.loop);
         sadAnimation = new SpriteAnimation(sadOnNomSprites, OMNOM_SPRITES.sad.frameRate, OMNOM_SPRITES.sad.loop);
+    }
+
+    preloadStarSounds() {
+        starSounds = [1, 2, 3].map((number) => {
+            const sound = new Audio(`assets/entities/star_${number}.wav`);
+            sound.preload = 'auto';
+            sound.load();
+            return sound;
+        });
     }
 }

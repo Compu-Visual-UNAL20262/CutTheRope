@@ -5,6 +5,8 @@
  */
 
 class Star {
+  static nextSoundIndex = 0;
+
   constructor(physicsWorld, x, y, onCollect = null, radius = STAR_RADIUS, ) {
     this.physicsWorld = physicsWorld;
     this.radius = radius;
@@ -50,19 +52,26 @@ class Star {
 
     this.physicsWorld.removeBody(this.body);
 
-    if (typeof this.onCollectCallback === 'function') {
-      this.onCollectCallback(this);
-    }
+    this.playCollectionSound();
+    this.onCollectCallback(this);
 
-    if (
-      typeof particleSystem !== 'undefined' &&
-      particleSystem &&
-      typeof particleSystem.emitStarBurst === 'function'
-    ) {
-      particleSystem.emitStarBurst(
-        this.body.position.x,
-        this.body.position.y
-      );
-    }
+    // if (
+    //   typeof particleSystem !== 'undefined' &&
+    //   particleSystem &&
+    //   typeof particleSystem.emitStarBurst === 'function'
+    // ) {
+    //   particleSystem.emitStarBurst(
+    //     this.body.position.x,
+    //     this.body.position.y
+    //   );
+    // }
+  }
+
+  playCollectionSound() {
+    const sound = starSounds[Star.nextSoundIndex];
+    Star.nextSoundIndex = (Star.nextSoundIndex + 1) % starSounds.length;
+
+    sound.currentTime = 0;
+    sound.play();
   }
 }

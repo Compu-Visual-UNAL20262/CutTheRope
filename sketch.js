@@ -25,6 +25,8 @@ let eatingAnimation;
 let sadAnimation;
 let starAnimation;
 
+let starSounds;
+
 /**
  * 1. PRELOAD: Decentralized asset loading per team member
  */
