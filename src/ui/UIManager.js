@@ -157,7 +157,7 @@ class UIManager {
     };
 
     this.initSuccessButtons();
-    this.initFailButtons();
+
 
     // Ensure assets are initialized
     if (!UIAssets.loaded) {
@@ -773,75 +773,17 @@ drawFailScreen() {
 
     // Botones
 
-    this.drawFailButton(
-        this.failButtons.replay,
+    this.drawSuccessButton(
+        this.successButtons.replay,
         UIAssets.btnRetry,
     );
 
-    this.drawFailButton(
-        this.failButtons.home,
+    this.drawSuccessButton(
+        this.successButtons.home,
         UIAssets.btnMenu,
     );
 }
 
-initFailButtons() {
-    this.failButtons = {
-        replay: {
-            x: width / 2 - 100,
-            y: height / 2 + 145,
-            w: 70,
-            h: 70
-        },
-        home: {
-            x: width / 2 + 100,
-            y: height / 2 + 165 - 20,
-            w: 80,
-            h: 42
-        }
-    };
-}
-
-getFailButtonAt(x, y) {
-    const buttons = this.failButtons;
-
-    for (const [action, btn] of Object.entries(buttons)) {
-        if (
-            x >= btn.x - btn.w / 2 &&
-            x <= btn.x + btn.w / 2 &&
-            y >= btn.y - btn.h / 2 &&
-            y <= btn.y + btn.h / 2
-        ) {
-            return action;
-        }
-    }
-
-    return null;
-}
-
-drawFailButton(btn, sprite, label) {
-    if (!btn) return;
-
-    push();
-    rectMode(CENTER);
-
-    if (sprite?.isReady) {
-        drawSafe(sprite, btn.x, btn.y, btn.w, btn.h, true);
-    } else {
-        fill(119, 177, 61);
-        stroke(65, 110, 36);
-        strokeWeight(3);
-        rect(btn.x, btn.y, btn.w, btn.h, 12);
-
-        noStroke();
-        fill(255);
-        textAlign(CENTER, CENTER);
-        textSize(16);
-        textStyle(BOLD);
-        text(label, btn.x, btn.y);
-    }
-
-    pop();
-}
 
 
 drawAudioButton() {
@@ -973,6 +915,10 @@ drawAudioButton() {
           }
         }
 
+        if (this.levelManager && typeof this.levelManager.loadLevel === 'function') {
+          this.levelManager.loadLevel(this.levelManager.currentLevel || 1);
+        }
+
         // Switch state to PLAYING
         if (this.gameState && typeof this.gameState.changeState === 'function') {
           this.gameState.changeState('PLAYING');
@@ -982,15 +928,37 @@ drawAudioButton() {
         }
         return true;
       }
-    } else if (currentState === 'LEVEL_WON' || currentState === 'LEVEL_LOST') {
-      if (this.levelManager && typeof this.levelManager.loadLevel === 'function') {
-        this.levelManager.loadLevel(1);
-      }
-      if (this.gameState && typeof this.gameState.changeState === 'function') {
-        this.gameState.changeState('PLAYING');
-      }
-      return true;
+    } else if (this.gameState.currentState === "LEVEL_WON" || this.gameState.currentState === "LEVEL_LOST") {
+    const action = this.getSuccessButtonAt(x, y);
+
+    if (!action) return false;
+
+    switch (action) {
+        case "next":
+            this.levelManager.loadLevel(this.levelManager.currentLevel+1);
+            this.gameState.changeState('PLAYING');
+            return true;
+
+        case "replay":
+            this.levelManager.loadLevel(this.levelManager.currentLevel);
+            this.gameState.changeState('PLAYING');
+            return true;
+
+        case "home":
+            this.gameState.changeState('MENU');
+            return true;
     }
+}
+    
+    // else if (currentState === 'LEVEL_WON' || currentState === 'LEVEL_LOST') {
+    //   if (this.levelManager && typeof this.levelManager.loadLevel === 'function') {
+    //     this.levelManager.loadLevel(1);
+    //   }
+    //   if (this.gameState && typeof this.gameState.changeState === 'function') {
+    //     this.gameState.changeState('PLAYING');
+    //   }
+    //   return true;
+    // }
 
     const btn = this.audioButton;
 

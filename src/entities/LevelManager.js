@@ -20,6 +20,14 @@ class LevelManager {
   }
 
   loadLevel(index = 1) {
+    if (this.physicsWorld && typeof this.physicsWorld.resetForNewLevel === 'function') {
+      this.physicsWorld.resetForNewLevel();
+    }
+
+    this.candy = null;
+    this.target = null;
+    this.stars = [];
+    this.ropes = [];
     this.currentLevel = index;
     this.collectedStars = 0;
     this.winNotified = false;
