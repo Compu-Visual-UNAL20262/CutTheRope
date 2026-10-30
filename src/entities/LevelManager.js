@@ -1,4 +1,3 @@
-
 /**
  * src/entities/LevelManager.js
  * Builds each level.
@@ -10,6 +9,7 @@ class LevelManager {
 
     this.candy = null;
     this.target = null;
+    this.bubble = null;
     this.stars = [];
     this.ropes = [];
 
@@ -22,15 +22,25 @@ class LevelManager {
   }
 
   clearCurrentLevel(){
+    if (typeof Bubble !== 'undefined' && typeof Bubble.clearAll === 'function') {
+      Bubble.clearAll();
+    }
+    if (typeof AirCushion !== 'undefined' && typeof AirCushion.clearAll === 'function') {
+      AirCushion.clearAll();
+    }
+    this.physicsWorld.resetForNewLevel();
+
     this.candy = null;
     this.target = null;
+    this.bubble = null;
     this.stars = [];
     this.ropes = [];
   }
 
-  loadLevel(index = 1) {
+  loadLevel(index) {
     this.clearCurrentLevel();
     this.currentLevel = index;
+    console.log(`Nivel actual: ${this.currentLevel}`);
     this.collectedStars = 0;
     this.winNotified = false;
     this.lossStarted = false;
@@ -50,27 +60,28 @@ class LevelManager {
       ];
       this.ropes.push(new Rope(centerX, 170, 4, this.candy.body));
     } else if (index === 2) {
-      // Nivel 2: Dos cuerdas en tensión
-      this.candy = new Candy(this.physicsWorld, centerX, 180, candySprites);
-      this.target = new Target(this.physicsWorld, centerX, h - 100);
+      // Nivel 2: Tres cuerdas en tensión
+      this.candy = new Candy(this.physicsWorld, centerX-170, 270, candySprites);
+      this.target = new Target(this.physicsWorld, centerX+130, h - 100);
       this.stars = [
-        new Star(this.physicsWorld, centerX, 280, 13, () => this.collectedStars++),
-        new Star(this.physicsWorld, centerX - 80, 360, 13, () => this.collectedStars++),
-        new Star(this.physicsWorld, centerX + 80, 360, 13, () => this.collectedStars++)
+        new Star(this.physicsWorld, centerX-170, 520, () => this.collectedStars++, 13),
+        new Star(this.physicsWorld, centerX - 170, 350, () => this.collectedStars++, 13),
+        new Star(this.physicsWorld, centerX + 170, 350, () => this.collectedStars++, 13)
       ];
-      this.ropes.push(new Rope(centerX - 100, 80, 7, this.candy.body));
-      this.ropes.push(new Rope(centerX + 100, 80, 7, this.candy.body));
+      this.ropes.push(new Rope(centerX - 170, 100, 1, this.candy.body));
+      this.ropes.push(new Rope(centerX + 170, 100,55, this.candy.body));
+      this.ropes.push(new Rope(centerX , 100, 30, this.candy.body));
     } else if (index === 3) {
       // Nivel 3: Cuerda y Burbuja antigravedad
-      this.candy = new Candy(this.physicsWorld, centerX, 130, candySprites);
-      this.target = new Target(this.physicsWorld, centerX, 90); // Om Nom arriba
+      this.candy = new Candy(this.physicsWorld, centerX, 170, candySprites);
+      this.target = new Target(this.physicsWorld, centerX, h-100); // Om Nom arriba
       this.stars = [
-        new Star(this.physicsWorld, centerX, 240, 13, () => this.collectedStars++),
-        new Star(this.physicsWorld, centerX, 340, 13, () => this.collectedStars++),
-        new Star(this.physicsWorld, centerX, 440, 13, () => this.collectedStars++)
+        new Star(this.physicsWorld, centerX, 120, () => this.collectedStars++, 13),
+        new Star(this.physicsWorld, centerX, 370, () => this.collectedStars++, 13),
+        new Star(this.physicsWorld, centerX, 470, () => this.collectedStars++, 13)
       ];
-      this.ropes.push(new Rope(centerX, 55, 6, this.candy.body));
-      new Bubble(this.physicsWorld, centerX, 320, 34); // Burbuja que atrapa el dulce al caer
+      this.ropes.push(new Rope(centerX, 170, 3, this.candy.body));
+      this.bubble = new Bubble(this.physicsWorld, centerX, 370);
     }
   }
 
@@ -89,11 +100,16 @@ class LevelManager {
       star.render();
     }
 
+    if (this.bubble) this.bubble.render();
+
     if (this.candy) this.candy.render();
 
     if (this.target && this.target.reached && !this.winNotified) {
       this.winNotified = true;
       if (this.candy) this.candy.delete();
+      for (let r=0; r<this.ropes.length; r++) {
+        this.ropes[r].destroyNodesAndConstraints();
+      }
 
       // Esperar a que termine la animación de masticar y notificar al GameState
       setTimeout(() => {
