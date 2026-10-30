@@ -10,6 +10,7 @@ class Target {
     this.radius = radius;
     this.type = 'target';
     this.reached = false;
+    this.lost = false;
     this.mouthOpen = false;
 
     this.body = Matter.Bodies.circle(x, y, radius, {
@@ -30,7 +31,12 @@ class Target {
     this.physicsWorld.addBody(this.body);
   }
 
-  update(candy, ) {
+  update(candy) {
+    if (this.lost) {
+      sadAnimation.update();
+      return;
+    }
+
     if (this.reached) {
       eatingAnimation.update();
       return;
@@ -67,7 +73,9 @@ class Target {
     image(supportSprite, supX, supY-this.radius/4, supportSprite.width, supportSprite.height);
 
     // OmNom
-    if (this.mouthOpen && !this.reached) {
+    if (this.lost) {
+      sadAnimation.draw(x, y, this.radius*2, this.radius*2);
+    } else if (this.mouthOpen && !this.reached) {
       openMouthAnimation.draw(x, y, this.radius*2, this.radius*2);
     } else if (this.reached) {
       eatingAnimation.draw(x, y, this.radius*2, this.radius*2);
@@ -84,5 +92,13 @@ class Target {
     this.reached = true;
     this.mouthOpen = true;
     eatingAnimation.reset();
+  }
+
+  onLost() {
+    if (this.reached || this.lost) return;
+
+    this.lost = true;
+    this.mouthOpen = false;
+    sadAnimation.reset();
   }
 }

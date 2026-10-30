@@ -27,7 +27,7 @@
     SENSOR: 0x0008
   },
 
-  LOADING_SPEED: 0.005 // ~3.3s loading duration at 60 FPS
+  LOADING_SPEED: 1.0//0.005 // ~3.3s loading duration at 60 FPS
 };
 
 // Entities-related constants
@@ -36,6 +36,7 @@
  const TARGET_RADIUS = 60
  const DETECTION_RADIUS = 150
  const STAR_RADIUS = 13
+ const STAR_BG_RATIO = 8
 
  const ANIMATION_TIME = 30;
  const OMNOM_SPRITES = {
@@ -129,6 +130,22 @@
     ],
     frameRate: 8,
     loop: false
+  }, 
+
+  sad: {
+    frames: [
+      {x:774,  y:0, w:142, h:126},
+      {x:916,  y:0, w:135, h:129},
+      {x:1051, y:0, w:131, h:134},
+      {x:1182, y:0, w:127, h:137},
+      {x:1309, y:0, w:125, h:139},
+      {x:1434, y:0, w:125, h:141},
+      {x:1559, y:0, w:127, h:135},
+      {x:1686, y:0, w:129, h:130},
+      {x:1815, y:0, w:131, h:127}
+    ],
+    frameRate: 8,
+    loop: false
   }
 };
 
@@ -140,15 +157,26 @@ const CANDY_SPRITES = [
 
 const SUPPORT_SPRITE = [{x:5, y:2, w:185, h:180}]
 
-//  const STAR_SPRITES = {
-//   spin: {
-//     frames: [
-//       // Los 10 frames de la estrella
-//     ],
-//     frameRate: 10,
-//     loop: true
-//   }
-// };
+const STAR_SPRITES = {
+  bg: [{x:14, y:6, w:122, h:126}],
+  animation: {
+    frames: [
+      {x:156, y:2, w:49, h:49},
+      {x:209, y:2, w:41, h:49},
+      {x:254, y:2, w:33, h:49},
+      {x:291, y:2, w:26, h:50},
+      {x:321, y:2, w:18, h:50},
+      {x:343, y:2, w:22, h:50},
+      {x:369, y:2, w:27, h:50},
+      {x:400, y:2, w:31, h:50},
+      {x:435, y:2, w:36, h:50},
+      {x:400, y:56, w:40, h:50},
+      {x:444, y:56, w:44, h:50}
+    ],
+    frameRate: 1.5,
+    loop: true
+  },
+}
 
 const ROPE_DEFAULT_SEGMENTS = 8;
 const ROPE_SEGMENT_LENGTH = 28.5;
