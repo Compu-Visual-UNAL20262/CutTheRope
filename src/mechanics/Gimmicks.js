@@ -312,13 +312,6 @@ class Bubble {
     const bubbleFriction = typeof BUBBLE_AIR_FRICTION !== 'undefined' ? BUBBLE_AIR_FRICTION : 0.045;
     candyBody.frictionAir = bubbleFriction;
 
-    // Dampen initial fall momentum smoothly so the bubble catches the candy immediately
-    if (typeof Matter !== 'undefined' && Matter.Body && candyBody.velocity) {
-      Matter.Body.setVelocity(candyBody, {
-        x: candyBody.velocity.x * 0.45,
-        y: Math.min(0, candyBody.velocity.y * 0.2)
-      });
-    }
   }
 
   /**

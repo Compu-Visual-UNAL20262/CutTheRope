@@ -230,7 +230,7 @@ function checkOutOfBounds() {
   const limitH = (typeof CONFIG !== 'undefined' && CONFIG.CANVAS_HEIGHT) ? CONFIG.CANVAS_HEIGHT : 720;
   const margin = 50;
 
-  const outY = candyPos.y > limitH + margin;
+  const outY = candyPos.y > limitH + margin || candyPos.y <= -10;
   const outX = candyPos.x < -margin || candyPos.x > limitW + margin;
 
   if (outY || outX) {

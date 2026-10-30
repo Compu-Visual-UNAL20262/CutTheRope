@@ -16,8 +16,8 @@ class Candy {
       label: CONFIG.LABELS.CANDY,
       restitution: 0.25,
       friction: 0.1,
-      frictionAir: 0.001,
-      density: 0.02,
+      frictionAir: 0.003,
+      density: 0.2,
       collisionFilter: {
         category: CONFIG.COLLISION_CATEGORIES.CANDY,
         mask: 0xFFFF

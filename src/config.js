@@ -8,7 +8,7 @@
   // Proportional vertical resolution for Cut the Rope (Aspect Ratio 2:3, classic 320x480 / 640x960)
   CANVAS_WIDTH: 480,
   CANVAS_HEIGHT: 720,
-  GRAVITY_Y: 0.3,
+  GRAVITY_Y: 0.8,
 
   LABELS: {
     CANDY: 'CANDY',
@@ -192,9 +192,9 @@ const CUTTER_BLADE_WIDTH = 9;
 const CUTTER_HIT_RADIUS = 5;
 
 const BUBBLE_RADIUS = 34;
-const BUBBLE_BUOYANCY_FACTOR = 1.85;
+const BUBBLE_BUOYANCY_FACTOR = 1.6;
 const BUBBLE_AIR_FRICTION = 0.045;
-const BUBBLE_MAX_UPWARD_SPEED = 4.2;
+const BUBBLE_MAX_UPWARD_SPEED = 2.5;
 
 const AIR_CUSHION_RADIUS = 48;
 const AIR_CUSHION_RANGE = 240;
