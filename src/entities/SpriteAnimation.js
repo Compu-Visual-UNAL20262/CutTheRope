@@ -39,11 +39,14 @@ class SpriteAnimation {
     }
   }
 
-  draw(x, y, w, h) {
+  draw(x, y, w=null, h=null) {
     const frame = this.frames[this.currentFrame];
 
+    let width = w ? w : frame.w;
+    let height = h ? h : frame.h;
+    
     imageMode(CENTER);
-    image(frame, x, y, w, h);
+    image(frame, x, y, width, height);
   }
 
   get isFinished() {

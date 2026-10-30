@@ -22,6 +22,7 @@ let starBgSprite;
 let idleAnimation;
 let openMouthAnimation;
 let eatingAnimation;
+let starAnimation;
 
 /**
  * 1. PRELOAD: Decentralized asset loading per team member

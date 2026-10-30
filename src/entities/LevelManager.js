@@ -88,6 +88,7 @@ class LevelManager {
 
     // Dibujar estrellas.
     for (const star of this.stars) {
+      star.update();
       star.render();
     }
 

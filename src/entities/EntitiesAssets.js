@@ -14,7 +14,9 @@ class EntitiesAssets {
         supportSprite = SUPPORT_SPRITE.map(({ x, y, w, h }) => this.supportImg.get(x, y, w, h))[0];
 
         this.starImg = await loadImage('assets/entities/star_sprite.png');
-        starBgSprite = STAR_SPRITES.bg.map(({ x, y, w, h }) => this.starImg.get(x, y, w, h))[0]
+        starBgSprite = STAR_SPRITES.bg.map(({ x, y, w, h }) => this.starImg.get(x, y, w, h))[0];
+        let starAnimSprites = STAR_SPRITES.animation.frames.map(({ x, y, w, h }) => this.starImg.get(x, y, w, h));
+        starAnimation = new SpriteAnimation(starAnimSprites, STAR_SPRITES.animation.frameRate, STAR_SPRITES.animation.loop);
 
         this.omNomImg = await loadImage('assets/entities/sprite.png');
         let idleOnNomSprites = OMNOM_SPRITES.idle.frames.map(({ x, y, w, h }) => this.omNomImg.get(x, y, w, h));
