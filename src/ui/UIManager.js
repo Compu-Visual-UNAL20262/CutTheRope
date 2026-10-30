@@ -661,8 +661,8 @@ initSuccessButtons() {
         replay: {
             x: width / 2 - 100,
             y: height / 2 + 145,
-            w: 70,
-            h: 70
+            w: 65,
+            h: 65
         },
         home: {
             x: width / 2 + 100,
@@ -697,6 +697,7 @@ drawSuccessButton(btn, sprite, label) {
     rectMode(CENTER);
 
     if (sprite?.isReady) {
+        mask: 0xFFFF
         drawSafe(sprite, btn.x, btn.y, btn.w, btn.h, true);
     } else {
         fill(119, 177, 61);
