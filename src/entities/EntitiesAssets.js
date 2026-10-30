@@ -22,8 +22,10 @@ class EntitiesAssets {
         let idleOnNomSprites = OMNOM_SPRITES.idle.frames.map(({ x, y, w, h }) => this.omNomImg.get(x, y, w, h));
         let openMouthOnNomSprites = OMNOM_SPRITES.openMouth.frames.map(({ x, y, w, h }) => this.omNomImg.get(x, y, w, h));
         let eatingOnNomSprites = OMNOM_SPRITES.eating.frames.map(({ x, y, w, h }) => this.omNomImg.get(x, y, w, h));
+        let sadOnNomSprites = OMNOM_SPRITES.sad.frames.map(({ x, y, w, h }) => this.omNomImg.get(x, y, w, h));
         idleAnimation = new SpriteAnimation(idleOnNomSprites, OMNOM_SPRITES.idle.frameRate, OMNOM_SPRITES.idle.loop);
         openMouthAnimation = new SpriteAnimation(openMouthOnNomSprites, OMNOM_SPRITES.openMouth.frameRate, OMNOM_SPRITES.openMouth.loop);
         eatingAnimation = new SpriteAnimation(eatingOnNomSprites, OMNOM_SPRITES.eating.frameRate, OMNOM_SPRITES.eating.loop);
+        sadAnimation = new SpriteAnimation(sadOnNomSprites, OMNOM_SPRITES.sad.frameRate, OMNOM_SPRITES.sad.loop);
     }
 }

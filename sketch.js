@@ -22,6 +22,7 @@ let starBgSprite;
 let idleAnimation;
 let openMouthAnimation;
 let eatingAnimation;
+let sadAnimation;
 let starAnimation;
 
 /**
@@ -233,7 +234,9 @@ function checkOutOfBounds() {
   const outX = candyPos.x < -margin || candyPos.x > limitW + margin;
 
   if (outY || outX) {
-    if (gameState && typeof gameState.setLost === 'function') {
+    if (levelManager && typeof levelManager.startLossAnimation === 'function') {
+      levelManager.startLossAnimation();
+    } else if (gameState && typeof gameState.setLost === 'function') {
       gameState.setLost();
     } else if (gameState && typeof gameState.changeState === 'function') {
       gameState.changeState('LEVEL_LOST');

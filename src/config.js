@@ -34,8 +34,8 @@
  const MASCARA_RADIUS = CANDY_RADIUS+2
  const TARGET_RADIUS = 60
  const DETECTION_RADIUS = 150
- const STAR_RADIUS = 15
- const STAR_BG_RATIO = 6
+ const STAR_RADIUS = 13
+ const STAR_BG_RATIO = 8
 
  const ANIMATION_TIME = 30;
  const OMNOM_SPRITES = {
@@ -126,6 +126,22 @@
       {x:262, y:1104, w:127, h:149},
       {x:262, y:1104, w:127, h:149},
       {x:262, y:1104, w:127, h:149},
+    ],
+    frameRate: 8,
+    loop: false
+  }, 
+
+  sad: {
+    frames: [
+      {x:774,  y:0, w:142, h:126},
+      {x:916,  y:0, w:135, h:129},
+      {x:1051, y:0, w:131, h:134},
+      {x:1182, y:0, w:127, h:137},
+      {x:1309, y:0, w:125, h:139},
+      {x:1434, y:0, w:125, h:141},
+      {x:1559, y:0, w:127, h:135},
+      {x:1686, y:0, w:129, h:130},
+      {x:1815, y:0, w:131, h:127}
     ],
     frameRate: 8,
     loop: false

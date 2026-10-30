@@ -16,6 +16,8 @@ class LevelManager {
     this.currentLevel = 1;
     this.collectedStars = 0;
     this.winNotified = false;
+    this.lossStarted = false;
+    this.lossNotified = false;
     this.candy_sprites = candySprites;
   }
 
@@ -23,6 +25,8 @@ class LevelManager {
     this.currentLevel = index;
     this.collectedStars = 0;
     this.winNotified = false;
+    this.lossStarted = false;
+    this.lossNotified = false;
 
     const w = CONFIG.CANVAS_WIDTH;
     const h = CONFIG.CANVAS_HEIGHT;
@@ -116,6 +120,25 @@ class LevelManager {
         }
       }
     }
+
+    if (this.target && this.target.lost && !this.lossNotified && sadAnimation.isFinished) {
+      this.lossNotified = true;
+
+      if (typeof gameState !== 'undefined' && gameState) {
+        if (typeof gameState.setLost === 'function') {
+          gameState.setLost();
+        } else if (typeof gameState.changeState === 'function') {
+          gameState.changeState('LEVEL_LOST');
+        }
+      }
+    }
+  }
+
+  startLossAnimation() {
+    if (this.lossStarted || !this.target || this.target.reached) return;
+
+    this.lossStarted = true;
+    this.target.onLost();
   }
 
   click(){
