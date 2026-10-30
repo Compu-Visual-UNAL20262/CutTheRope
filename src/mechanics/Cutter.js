@@ -50,6 +50,13 @@ class Cutter {
       }
     }
 
+    // If the user clicked on an AirCushion, puff it instead of starting a cut
+    if (typeof AirCushion !== 'undefined' && typeof AirCushion.handleGlobalClick === 'function') {
+      if (AirCushion.handleGlobalClick(x, y)) {
+        return;
+      }
+    }
+
     this.isSlicing = true;
     this.prevX = x;
     this.prevY = y;
@@ -404,10 +411,21 @@ class Cutter {
   }
 
   /**
-   * Renders the active blade slash trail and cut bursts in p5.js.
+   * Renders active gimmicks (if not already rendered this frame), blade slash trail, and cut bursts in p5.js.
    */
   render() {
     push();
+
+    // Render active AirCushion instances if LevelManager did not already draw them this frame
+    if (typeof AirCushion !== 'undefined' && Array.isArray(AirCushion.activeInstances)) {
+      const currFrame = typeof frameCount === 'number' ? frameCount : -999;
+      for (let i = 0; i < AirCushion.activeInstances.length; i++) {
+        const c = AirCushion.activeInstances[i];
+        if (c && !c.destroyed && c._lastRenderFrame !== currFrame) {
+          c.render();
+        }
+      }
+    }
 
     this.renderBladeTrail();
     this.renderCutBursts();
