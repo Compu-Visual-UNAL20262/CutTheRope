@@ -26,6 +26,7 @@ let sadAnimation;
 let starAnimation;
 
 let starSounds;
+let omNomSounds;
 
 /**
  * 1. PRELOAD: Decentralized asset loading per team member
@@ -238,6 +239,7 @@ function checkOutOfBounds() {
   if (outY || outX) {
     if (levelManager && typeof levelManager.startLossAnimation === 'function') {
       levelManager.startLossAnimation();
+      levelManager.candy.delete();
     } else if (gameState && typeof gameState.setLost === 'function') {
       gameState.setLost();
     } else if (gameState && typeof gameState.changeState === 'function') {

@@ -50,6 +50,7 @@ class Target {
     if (distance < DETECTION_RADIUS) {
       if (!this.mouthOpen) {
         openMouthAnimation.reset();
+        this.playSound('open');
       }
       this.mouthOpen = true;
       openMouthAnimation.update();
@@ -90,6 +91,7 @@ class Target {
 
     this.reached = true;
     this.mouthOpen = true;
+    this.playSound('chewing');
     eatingAnimation.reset();
   }
 
@@ -98,6 +100,21 @@ class Target {
 
     this.lost = true;
     this.mouthOpen = false;
+    this.playSound('sad');
     sadAnimation.reset();
+  }
+
+  playSound(name) {
+    const sound = omNomSounds[name];
+
+    for (const otherSound of Object.values(omNomSounds)) {
+      if (otherSound !== sound && !otherSound.paused) {
+        otherSound.pause();
+        otherSound.currentTime = 0;
+      }
+    }
+
+    sound.currentTime = 0;
+    sound.play();
   }
 }

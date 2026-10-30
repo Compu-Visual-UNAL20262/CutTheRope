@@ -4,7 +4,6 @@ class EntitiesAssets {
         this.supportImg = null;
         this.starImg=null;
         this.omNomImg = null;
-        this.starSounds = [];
 
         this.mascara = createGraphics(CANDY_RADIUS, CANDY_RADIUS);
         this.mascara.fill(0);  
@@ -14,6 +13,7 @@ class EntitiesAssets {
 
     async preload(){
         this.preloadStarSounds();
+        this.preloadOmNomSounds();
 
         this.candyImg = await loadImage('assets/entities/candy_sprite.png');
         candySprites = CANDY_SPRITES.map(({ x, y, w, h }) => this.candyImg.get(x, y, w, h));
@@ -36,7 +36,7 @@ class EntitiesAssets {
         let sadOnNomSprites = OMNOM_SPRITES.sad.frames.map(({ x, y, w, h }) => this.omNomImg.get(x, y, w, h));
         idleAnimation = new SpriteAnimation(idleOnNomSprites, OMNOM_SPRITES.idle.frameRate, OMNOM_SPRITES.idle.loop);
         openMouthAnimation = new SpriteAnimation(openMouthOnNomSprites, OMNOM_SPRITES.openMouth.frameRate, OMNOM_SPRITES.openMouth.loop);
-        eatingAnimation = new SpriteAnimation(eatingOnNomSprites, OMNOM_SPRITES.eating.frameRate, OMNOM_SPRITES.eating.loop);
+        eatingAnimation = new SpriteAnimation(eatingOnNomSprites, OMNOM_SPRITES.eating.frameRate, OMNOM_SPRITES.eating.loop, OMNOM_SPRITES.eating.loopStart);
         sadAnimation = new SpriteAnimation(sadOnNomSprites, OMNOM_SPRITES.sad.frameRate, OMNOM_SPRITES.sad.loop);
     }
 
@@ -47,5 +47,18 @@ class EntitiesAssets {
             sound.load();
             return sound;
         });
+    }
+
+    preloadOmNomSounds() {
+        omNomSounds = {
+            open: new Audio('assets/entities/monster_open.wav'),
+            chewing: new Audio('assets/entities/monster_chewing.wav'),
+            sad: new Audio('assets/entities/monster_sad.wav')
+        };
+
+        for (const [name, sound] of Object.entries(omNomSounds)) {
+            sound.preload = 'auto';
+            sound.load();
+        }
     }
 }

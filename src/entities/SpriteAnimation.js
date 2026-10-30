@@ -1,10 +1,10 @@
 
 class SpriteAnimation {
-  constructor(frames, frameRate = 10, loop = true) {
+  constructor(frames, frameRate = 10, loop = true, loopStart = 0) {
     this.frames = frames;
     this.frameRate = frameRate;
     this.loop = loop;
-
+    this.loopStart = loopStart;
     this.currentFrame = 0;
     this.elapsed = 0;
     this.finished = false;
@@ -29,7 +29,7 @@ class SpriteAnimation {
 
       if (this.currentFrame >= this.frames.length) {
         if (this.loop) {
-          this.currentFrame = 0;
+          this.currentFrame = this.loopStart;
         } else {
           this.currentFrame = this.frames.length - 1;
           this.finished = true;
