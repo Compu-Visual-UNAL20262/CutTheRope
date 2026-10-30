@@ -36,53 +36,44 @@ class LevelManager {
     this.lossStarted = false;
     this.lossNotified = false;
 
-    const w = CONFIG.CANVAS_WIDTH;
+    const centerX = CONFIG.CANVAS_WIDTH / 2;
     const h = CONFIG.CANVAS_HEIGHT;
-    const centerX = w / 2;
 
-    // Creating entities
-    this.candy = new Candy(
-      this.physicsWorld,
-      centerX-50,
-      130,
-      candySprites
-    );
-
-    this.target = new Target(
-    this.physicsWorld,
-    centerX,
-    h-110);
-
-    const starPositions = [
-      { x: centerX - 85, y: 270 },
-      { x: centerX,      y: 340 },
-      { x: centerX + 85, y: 270 }
-    ];
-
-    this.stars = starPositions.map(pos =>
-      new Star(
-        this.physicsWorld,
-        pos.x,
-        pos.y,
-        () => {
-          this.collectedStars++;
-        }
-      )
-    );
-
-    // 4. Conectar la cuerda de Farid si ya está disponible.
-    // La firma acordada es Rope(pinX, pinY, segments, candyBody).
-    if (typeof Rope !== 'undefined') {
-      const rope = new Rope(
-        centerX,
-        55,
-        8,
-        this.candy.body
-      );
-
-      this.ropes.push(rope);
+    if (index === 1) {
+      // Nivel 1: Péndulo simple
+      this.candy = new Candy(this.physicsWorld, centerX - 60, 190, candySprites);
+      this.target = new Target(this.physicsWorld, centerX, h - 100);
+      this.stars = [
+        new Star(this.physicsWorld, centerX - 85, 270, () => this.collectedStars++),
+        new Star(this.physicsWorld, centerX, 340, () => this.collectedStars++),
+        new Star(this.physicsWorld, centerX + 85, 270, () => this.collectedStars++)
+      ];
+      this.ropes.push(new Rope(centerX, 170, 4, this.candy.body));
+    } else if (index === 2) {
+      // Nivel 2: Dos cuerdas en tensión
+      this.candy = new Candy(this.physicsWorld, centerX, 180, candySprites);
+      this.target = new Target(this.physicsWorld, centerX, h - 100);
+      this.stars = [
+        new Star(this.physicsWorld, centerX, 280, 13, () => this.collectedStars++),
+        new Star(this.physicsWorld, centerX - 80, 360, 13, () => this.collectedStars++),
+        new Star(this.physicsWorld, centerX + 80, 360, 13, () => this.collectedStars++)
+      ];
+      this.ropes.push(new Rope(centerX - 100, 80, 7, this.candy.body));
+      this.ropes.push(new Rope(centerX + 100, 80, 7, this.candy.body));
+    } else if (index === 3) {
+      // Nivel 3: Cuerda y Burbuja antigravedad
+      this.candy = new Candy(this.physicsWorld, centerX, 130, candySprites);
+      this.target = new Target(this.physicsWorld, centerX, 90); // Om Nom arriba
+      this.stars = [
+        new Star(this.physicsWorld, centerX, 240, 13, () => this.collectedStars++),
+        new Star(this.physicsWorld, centerX, 340, 13, () => this.collectedStars++),
+        new Star(this.physicsWorld, centerX, 440, 13, () => this.collectedStars++)
+      ];
+      this.ropes.push(new Rope(centerX, 55, 6, this.candy.body));
+      new Bubble(this.physicsWorld, centerX, 320, 34); // Burbuja que atrapa el dulce al caer
     }
   }
+
 
   async render() {
     // Dibujar primero las cuerdas.
@@ -93,7 +84,10 @@ class LevelManager {
       this.target.render();
     }
 
-    for (const star of this.stars) star.render();
+    for (const star of this.stars) {
+      star.update();
+      star.render();
+    }
 
     if (this.candy) this.candy.render();
 
