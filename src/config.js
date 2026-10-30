@@ -15,6 +15,7 @@
     STAR: 'STAR',
     TARGET: 'TARGET',
     BUBBLE: 'BUBBLE',
+    AIR_CUSHION: 'AIR_CUSHION',
     ROPE_NODE: 'ROPE_NODE',
     SPIKE: 'SPIKE' // Reserved for optional spikes mechanic
   },
@@ -194,6 +195,46 @@ const BUBBLE_RADIUS = 34;
 const BUBBLE_BUOYANCY_FACTOR = 1.85;
 const BUBBLE_AIR_FRICTION = 0.045;
 const BUBBLE_MAX_UPWARD_SPEED = 4.2;
+
+const AIR_CUSHION_RADIUS = 48;
+const AIR_CUSHION_RANGE = 240;
+const AIR_CUSHION_CONE_HALF_ANGLE = Math.PI * 0.38;
+const AIR_CUSHION_FORCE = 0.0085;
+const AIR_CUSHION_VELOCITY_BOOST = 0.65;
+const AIR_CUSHION_COOLDOWN_MS = 180;
+
+const BUBBLE_FLIGHT_FRAMES = [
+  { x: 0, y: 0,    w: 90,  h: 108 },
+  { x: 0, y: 108,  w: 90,  h: 107 },
+  { x: 0, y: 215,  w: 94,  h: 103 },
+  { x: 0, y: 318,  w: 98,  h: 100 },
+  { x: 0, y: 418,  w: 102, h: 98  },
+  { x: 0, y: 516,  w: 106, h: 93  },
+  { x: 0, y: 609,  w: 108, h: 90  },
+  { x: 0, y: 699,  w: 108, h: 89  },
+  { x: 0, y: 788,  w: 106, h: 90  },
+  { x: 0, y: 878,  w: 102, h: 94  },
+  { x: 0, y: 972,  w: 98,  h: 99  },
+  { x: 0, y: 1071, w: 94,  h: 105 },
+  { x: 0, y: 1176, w: 90,  h: 107 },
+  { x: 0, y: 1283, w: 90,  h: 109 }
+];
+
+const BUBBLE_ATTACHED_FRAMES = [
+  { x: 0, y: 0, w: 98, h: 98 },
+  { x: 2, y: 99, w: 112, h: 129 },
+  { x: 1, y: 231, w: 114, h: 113 },
+  { x: 1, y: 346, w: 114, h: 111 }
+];
+
+const CUSHION_FRAMES = [
+  { x: 10, y: 2, w: 133, h: 140 },
+  { x: 0, y: 175, w: 132, h: 150 },
+  { x: 0, y: 343, w: 131, h: 168 },
+  { x: 10, y: 525, w: 131, h: 147 },
+  { x: 11, y: 688, w: 136, h: 125 },
+  { x: 10, y: 829, w: 133, h: 131 }
+];
 
 
 // Global scope  for compatibility across scripts and modules

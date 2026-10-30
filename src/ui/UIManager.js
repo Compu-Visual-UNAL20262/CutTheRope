@@ -77,6 +77,7 @@ const UIAssets = {
   btnNormal: null,
   btnPressed: null,
   omnomIdle: null,
+  onNomSad: null,
   omnomSupport: null,
   candySwirl: null,
   spinner: null,
@@ -91,7 +92,6 @@ const UIAssets = {
   audiooff: null,
   audioon: null,
   nextLevelBg: null,
-  successTitle: null,
   starsLevel: null,
   successNom: null,
   btnNextLevel: null,
@@ -104,9 +104,9 @@ const UIAssets = {
     this.star = loadSafeImage('star', 'assets/ui/golden_star.png');
     this.startranslucent = loadSafeImage('startranslucent', 'assets/ui/translucent_star.png');
     this.nextLevelBg= loadSafeImage('nextLevelBg', 'assets/ui/menu_bgr_hd.png'); //listo
-    this.successTitle= loadSafeImage('successTitle', 'assets/ui/success_title.png');
-    this.starsLevel= loadSafeImage('starsLevel', 'assets/ui/stars_level.png');
-    this.successNom = loadSafeImage('successNom', 'assets/ui/omnom_idle.png'); //listo
+    //this.successTitle= loadSafeImage('successTitle', 'assets/ui/success_title.png');
+    //this.starsLevel= loadSafeImage('starsLevel', 'assets/ui/stars_level.png');
+    this.onNomSad = loadSafeImage('omNomSad', 'assets/ui/omNomSad.png'); //listo
     this.btnNextLevel = loadSafeImage('btnNextLevel', 'assets/ui/next_level.png'); //listo
     this.btnMenu = loadSafeImage('btnMenu', 'assets/ui/menu_button.png'); //listo
     this.btnRetry = loadSafeImage('btnRetry', 'assets/ui/btn_retry.png'); //listo 
@@ -585,16 +585,7 @@ drawSuccessScreen() {
     pop();
 
     // Título
-    if (UIAssets.successTitle?.isReady) {
-        drawSafe(
-            UIAssets.successTitle,
-            width / 2,
-            height / 2 - 115,
-            260,
-            85,
-            true
-        );
-    } else {
+    
         push();
         fill(101, 63, 30);
         noStroke();
@@ -604,7 +595,7 @@ drawSuccessScreen() {
         textStyle(BOLD);
         text("¡Excelente!", width / 2, height / 2 - 115);
         pop();
-    }
+
 
     // Om Nom celebrando
     drawSafe(
@@ -612,7 +603,7 @@ drawSuccessScreen() {
             width / 2,
             height / 2 - 115 + 80,
             100,
-            85,
+            100,
             true
         );
 
@@ -747,16 +738,8 @@ drawFailScreen() {
     pop();
 
     // Título
-    if (UIAssets.successTitle?.isReady) {
-        drawSafe(
-            UIAssets.successTitle,
-            width / 2,
-            height / 2 - 115,
-            260,
-            85,
-            true
-        );
-    } else {
+
+
         push();
         fill(101, 63, 30);
         noStroke();
@@ -776,15 +759,15 @@ drawFailScreen() {
         textStyle(BOLD);
         text("¡Estuviste Cerca!", width / 2, height / 2 - 80);
         pop();
-    }
+
 
     // Om Nom triste
     drawSafe(
-            UIAssets.omnomIdle,
+            UIAssets.onNomSad,
             width / 2,
-            height / 2 - 115 + 80+20,
+            height / 2 - 115 + 80+50,
             100,
-            85,
+            100,
             true
         );
 
