@@ -42,8 +42,6 @@ class SpriteAnimation {
   draw(x, y, w, h) {
     const frame = this.frames[this.currentFrame];
 
-    if (!frame) return;
-
     imageMode(CENTER);
     image(frame, x, y, w, h);
   }

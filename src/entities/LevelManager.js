@@ -52,7 +52,6 @@ class LevelManager {
         this.physicsWorld,
         pos.x,
         pos.y,
-        13,
         () => {
           this.collectedStars++;
         }

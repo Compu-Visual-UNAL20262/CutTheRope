@@ -2,6 +2,7 @@ class EntitiesAssets {
     constructor(){
         this.candyImg = null;
         this.supportImg = null;
+        this.starImg=null;
         this.omNomImg = null;
     }
 
@@ -11,6 +12,9 @@ class EntitiesAssets {
 
         this.supportImg = await loadImage('assets/entities/support_sprite.png');
         supportSprite = SUPPORT_SPRITE.map(({ x, y, w, h }) => this.supportImg.get(x, y, w, h))[0];
+
+        this.starImg = await loadImage('assets/entities/star_sprite.png');
+        starBgSprite = STAR_SPRITES.bg.map(({ x, y, w, h }) => this.starImg.get(x, y, w, h))[0]
 
         this.omNomImg = await loadImage('assets/entities/sprite.png');
         let idleOnNomSprites = OMNOM_SPRITES.idle.frames.map(({ x, y, w, h }) => this.omNomImg.get(x, y, w, h));

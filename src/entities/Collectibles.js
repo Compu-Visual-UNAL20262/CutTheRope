@@ -5,12 +5,13 @@
  */
 
 class Star {
-  constructor(physicsWorld, x, y, radius = STAR_RADIUS, onCollect = null) {
+  constructor(physicsWorld, x, y, onCollect = null, radius = STAR_RADIUS, ) {
     this.physicsWorld = physicsWorld;
     this.radius = radius;
     this.type = 'star';
     this.collected = false;
     this.onCollectCallback = onCollect;
+    this.BGsprite = starBgSprite;
 
     this.body = Matter.Bodies.circle(x, y, radius, {
       label: CONFIG.LABELS.STAR,
@@ -26,6 +27,14 @@ class Star {
     if (this.collected) return;
 
     const { x, y } = this.body.position;
+    push();
+    translate(x, y);
+    rotate(this.body.angle);
+
+    imageMode(CENTER);
+    image(this.BGsprite, 0, 0, this.radius*STAR_BG_RATIO, this.radius*STAR_BG_RATIO);
+
+    pop();
 
     push();
     translate(x, y);

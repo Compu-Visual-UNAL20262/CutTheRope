@@ -17,6 +17,7 @@ let entitiesAssets;
 
 let candySprites;
 let supportSprite;
+let starBgSprite;
 
 let idleAnimation;
 let openMouthAnimation;

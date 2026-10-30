@@ -26,7 +26,7 @@
     SENSOR: 0x0008
   },
 
-  LOADING_SPEED: 0.005 // ~3.3s loading duration at 60 FPS
+  LOADING_SPEED: 1.0//0.005 // ~3.3s loading duration at 60 FPS
 };
 
 // Entities-related constants
@@ -34,7 +34,8 @@
  const MASCARA_RADIUS = CANDY_RADIUS+2
  const TARGET_RADIUS = 60
  const DETECTION_RADIUS = 150
- const STAR_RADIUS = 13
+ const STAR_RADIUS = 15
+ const STAR_BG_RATIO = 6
 
  const ANIMATION_TIME = 30;
  const OMNOM_SPRITES = {
@@ -138,6 +139,17 @@ const CANDY_SPRITES = [
 ]
 
 const SUPPORT_SPRITE = [{x:5, y:2, w:185, h:180}]
+
+const STAR_SPRITES = {
+  bg: [{x:14, y:6, w:122, h:126}],
+  animation: {
+    frames: [
+      {}
+    ],
+    frameRate: 12,
+    loop: true
+  },
+}
 
 //  const STAR_SPRITES = {
 //   spin: {
