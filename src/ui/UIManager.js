@@ -77,6 +77,7 @@ const UIAssets = {
   btnNormal: null,
   btnPressed: null,
   omnomIdle: null,
+  onNomSad: null,
   omnomSupport: null,
   candySwirl: null,
   spinner: null,
@@ -105,7 +106,7 @@ const UIAssets = {
     this.nextLevelBg= loadSafeImage('nextLevelBg', 'assets/ui/menu_bgr_hd.png'); //listo
     //this.successTitle= loadSafeImage('successTitle', 'assets/ui/success_title.png');
     //this.starsLevel= loadSafeImage('starsLevel', 'assets/ui/stars_level.png');
-    this.successNom = loadSafeImage('successNom', 'assets/ui/omnom_idle.png'); //listo
+    this.onNomSad = loadSafeImage('omNomSad', 'assets/ui/omNomSad.png'); //listo
     this.btnNextLevel = loadSafeImage('btnNextLevel', 'assets/ui/next_level.png'); //listo
     this.btnMenu = loadSafeImage('btnMenu', 'assets/ui/menu_button.png'); //listo
     this.btnRetry = loadSafeImage('btnRetry', 'assets/ui/btn_retry.png'); //listo 
@@ -602,7 +603,7 @@ drawSuccessScreen() {
             width / 2,
             height / 2 - 115 + 80,
             100,
-            85,
+            100,
             true
         );
 
@@ -762,11 +763,11 @@ drawFailScreen() {
 
     // Om Nom triste
     drawSafe(
-            UIAssets.omnomIdle,
+            UIAssets.onNomSad,
             width / 2,
-            height / 2 - 115 + 80+20,
+            height / 2 - 115 + 80+50,
             100,
-            85,
+            100,
             true
         );
 
