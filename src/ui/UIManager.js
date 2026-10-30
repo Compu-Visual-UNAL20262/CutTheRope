@@ -90,12 +90,26 @@ const UIAssets = {
   startranslucent: null,
   audiooff: null,
   audioon: null,
+  nextLevelBg: null,
+  successTitle: null,
+  starsLevel: null,
+  successNom: null,
+  btnNextLevel: null,
+  btnMenu: null,
+  btnRetry: null,
 
   preload() {
     this.menuBgr = loadSafeImage('menuBgr', 'assets/ui/menu_bgr_opt.jpg');
     this.menuShadow = loadSafeImage('menuShadow', 'assets/ui/menu_shadow.png');
     this.star = loadSafeImage('star', 'assets/ui/golden_star.png');
     this.startranslucent = loadSafeImage('startranslucent', 'assets/ui/translucent_star.png');
+    this.nextLevelBg= loadSafeImage('nextLevelBg', 'assets/ui/menu_bgr_hd.png'); //listo
+    this.successTitle= loadSafeImage('successTitle', 'assets/ui/success_title.png');
+    this.starsLevel= loadSafeImage('starsLevel', 'assets/ui/stars_level.png');
+    this.successNom = loadSafeImage('successNom', 'assets/ui/omnom_idle.png'); //listo
+    this.btnNextLevel = loadSafeImage('btnNextLevel', 'assets/ui/next_level.png'); //listo
+    this.btnMenu = loadSafeImage('btnMenu', 'assets/ui/menu_button.png'); //listo
+    this.btnRetry = loadSafeImage('btnRetry', 'assets/ui/btn_retry.png'); //listo 
     this.audiooff = loadSafeImage('noaudio', 'assets/ui/no_audio.png');
     this.audioon = loadSafeImage('audio_active', 'assets/ui/audio_activo.png');
     this.btnNormal = loadSafeImage('btnNormal', 'assets/ui/btn_default_normal.png');
@@ -139,6 +153,9 @@ class UIManager {
       y: 0,
       size: 38
     };
+
+    this.initSuccessButtons();
+    this.initFailButtons();
 
     // Ensure assets are initialized
     if (!UIAssets.loaded) {
@@ -543,6 +560,305 @@ class UIManager {
   }
 }
 
+drawSuccessScreen() {
+    // Fondo
+    if (UIAssets.nextLevelBg?.isReady) {
+        drawSafe(UIAssets.nextLevelBg, 0, 0, width+180, height+180);
+    } else {
+        background(244, 211, 151);
+    }
+
+    // Sombra para darle profundidad al panel
+    push();
+    rectMode(CENTER);
+    noStroke();
+    fill(70, 43, 25, 75);
+    rect(width / 2, (height / 2) +20 + 8, 340, 350, 28);
+
+    // Panel central
+    fill(255, 239, 196);
+    stroke(145, 93, 48);
+    strokeWeight(5);
+    rect(width / 2, (height / 2) +20, 340, 350, 28);
+    pop();
+
+    // Título
+    if (UIAssets.successTitle?.isReady) {
+        drawSafe(
+            UIAssets.successTitle,
+            width / 2,
+            height / 2 - 115,
+            260,
+            85,
+            true
+        );
+    } else {
+        push();
+        fill(101, 63, 30);
+        noStroke();
+        textFont("Fredoka");
+        textAlign(CENTER, CENTER);
+        textSize(28);
+        textStyle(BOLD);
+        text("¡Excelente!", width / 2, height / 2 - 115);
+        pop();
+    }
+
+    // Om Nom celebrando
+    drawSafe(
+            UIAssets.omnomIdle,
+            width / 2,
+            height / 2 - 115 + 80,
+            100,
+            85,
+            true
+        );
+
+    // Estrellas obtenidas
+    const stars = this.levelManager?.collectedStars ?? 0;
+    const starSize = 55;
+    const gap = 70;
+    const startX = width / 2 - gap;
+
+    for (let i = 0; i < 3; i++) {
+        const x = startX + i * gap;
+        const y = height / 2 - 25 +80;
+
+        push();
+        textAlign(CENTER, CENTER);
+        textSize(starSize);
+        noStroke();
+
+        // Si existen los sprites, los utilizamos
+        const sprite = i < stars
+            ? UIAssets.star
+            : UIAssets.startranslucent;
+
+        if (sprite?.isReady) {
+            drawSafe(sprite, x, y, starSize, starSize, true);
+        }
+        pop();
+    }
+
+    // Botones
+    this.drawSuccessButton(
+        this.successButtons.next,
+        UIAssets.btnNextLevel,
+    );
+
+    this.drawSuccessButton(
+        this.successButtons.replay,
+        UIAssets.btnRetry,
+    );
+
+    this.drawSuccessButton(
+        this.successButtons.home,
+        UIAssets.btnMenu,
+    );
+}
+
+initSuccessButtons() {
+    this.successButtons = {
+        next: {
+            x: width / 2,
+            y: height / 2 + 145,
+            w: 70,
+            h: 70
+        },
+        replay: {
+            x: width / 2 - 100,
+            y: height / 2 + 145,
+            w: 70,
+            h: 70
+        },
+        home: {
+            x: width / 2 + 100,
+            y: height / 2 + 165 - 20,
+            w: 80,
+            h: 42
+        }
+    };
+}
+
+getSuccessButtonAt(x, y) {
+    const buttons = this.successButtons;
+
+    for (const [action, btn] of Object.entries(buttons)) {
+        if (
+            x >= btn.x - btn.w / 2 &&
+            x <= btn.x + btn.w / 2 &&
+            y >= btn.y - btn.h / 2 &&
+            y <= btn.y + btn.h / 2
+        ) {
+            return action;
+        }
+    }
+
+    return null;
+}
+
+drawSuccessButton(btn, sprite, label) {
+    if (!btn) return;
+
+    push();
+    rectMode(CENTER);
+
+    if (sprite?.isReady) {
+        drawSafe(sprite, btn.x, btn.y, btn.w, btn.h, true);
+    } else {
+        fill(119, 177, 61);
+        stroke(65, 110, 36);
+        strokeWeight(3);
+        rect(btn.x, btn.y, btn.w, btn.h, 12);
+
+        noStroke();
+        fill(255);
+        textAlign(CENTER, CENTER);
+        textSize(16);
+        textStyle(BOLD);
+        text(label, btn.x, btn.y);
+    }
+
+    pop();
+}
+
+drawFailScreen() {
+    // Fondo
+    if (UIAssets.nextLevelBg?.isReady) {
+        drawSafe(UIAssets.nextLevelBg, 0, 0, width+180, height+180);
+    } else {
+        background(244, 211, 151);
+    }
+
+    // Sombra para darle profundidad al panel
+    push();
+    rectMode(CENTER);
+    noStroke();
+    fill(70, 43, 25, 75);
+    rect(width / 2, (height / 2) +20 + 8, 340, 350, 28);
+
+    // Panel central
+    fill(255, 239, 196);
+    stroke(145, 93, 48);
+    strokeWeight(5);
+    rect(width / 2, (height / 2) +20, 340, 350, 28);
+    pop();
+
+    // Título
+    if (UIAssets.successTitle?.isReady) {
+        drawSafe(
+            UIAssets.successTitle,
+            width / 2,
+            height / 2 - 115,
+            260,
+            85,
+            true
+        );
+    } else {
+        push();
+        fill(101, 63, 30);
+        noStroke();
+        textFont("Fredoka");
+        textAlign(CENTER, CENTER);
+        textSize(28);
+        textStyle(BOLD);
+        text("¡Ups!", width / 2, height / 2 - 115);
+        pop();
+
+        push();
+        fill(101, 63, 30);
+        noStroke();
+        textFont("Fredoka");
+        textAlign(CENTER, CENTER);
+        textSize(28);
+        textStyle(BOLD);
+        text("¡Estuviste Cerca!", width / 2, height / 2 - 80);
+        pop();
+    }
+
+    // Om Nom triste
+    drawSafe(
+            UIAssets.omnomIdle,
+            width / 2,
+            height / 2 - 115 + 80+20,
+            100,
+            85,
+            true
+        );
+
+    // Botones
+
+    this.drawFailButton(
+        this.failButtons.replay,
+        UIAssets.btnRetry,
+    );
+
+    this.drawFailButton(
+        this.failButtons.home,
+        UIAssets.btnMenu,
+    );
+}
+
+initFailButtons() {
+    this.failButtons = {
+        replay: {
+            x: width / 2 - 100,
+            y: height / 2 + 145,
+            w: 70,
+            h: 70
+        },
+        home: {
+            x: width / 2 + 100,
+            y: height / 2 + 165 - 20,
+            w: 80,
+            h: 42
+        }
+    };
+}
+
+getFailButtonAt(x, y) {
+    const buttons = this.failButtons;
+
+    for (const [action, btn] of Object.entries(buttons)) {
+        if (
+            x >= btn.x - btn.w / 2 &&
+            x <= btn.x + btn.w / 2 &&
+            y >= btn.y - btn.h / 2 &&
+            y <= btn.y + btn.h / 2
+        ) {
+            return action;
+        }
+    }
+
+    return null;
+}
+
+drawFailButton(btn, sprite, label) {
+    if (!btn) return;
+
+    push();
+    rectMode(CENTER);
+
+    if (sprite?.isReady) {
+        drawSafe(sprite, btn.x, btn.y, btn.w, btn.h, true);
+    } else {
+        fill(119, 177, 61);
+        stroke(65, 110, 36);
+        strokeWeight(3);
+        rect(btn.x, btn.y, btn.w, btn.h, 12);
+
+        noStroke();
+        fill(255);
+        textAlign(CENTER, CENTER);
+        textSize(16);
+        textStyle(BOLD);
+        text(label, btn.x, btn.y);
+    }
+
+    pop();
+}
+
+
 drawAudioButton() {
   const btn = this.audioButton;
 
@@ -584,6 +900,8 @@ drawAudioButton() {
 
   pop();
 }
+
+
 
 
   /**

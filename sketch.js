@@ -187,7 +187,11 @@ function draw() {
       break;
 
     case 'LEVEL_WON':
+      uiManager.drawSuccessScreen();
+      break;
     case 'LEVEL_LOST':
+      uiManager.drawFailScreen();
+      break;
     case 'GAME_COMPLETED':
       // Render overlay for completion/failure states
       if (uiManager && typeof uiManager.drawOverlay === 'function') {
