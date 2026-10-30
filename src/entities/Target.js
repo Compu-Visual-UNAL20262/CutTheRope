@@ -27,7 +27,6 @@ class Target {
     );
 
     this.body.gameObject = this;
-    this.physicsWorld.addBody(this.support);
     this.physicsWorld.addBody(this.body);
   }
 

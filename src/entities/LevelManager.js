@@ -21,7 +21,15 @@ class LevelManager {
     this.candy_sprites = candySprites;
   }
 
+  clearCurrentLevel(){
+    this.candy = null;
+    this.target = null;
+    this.stars = [];
+    this.ropes = [];
+  }
+
   loadLevel(index = 1) {
+    this.clearCurrentLevel();
     this.currentLevel = index;
     this.collectedStars = 0;
     this.winNotified = false;
@@ -78,48 +86,30 @@ class LevelManager {
 
   async render() {
     // Dibujar primero las cuerdas.
-    for (const rope of this.ropes) {
-      if (rope && typeof rope.render === 'function') {
-        rope.render();
-      }
-    }
+    for (const rope of this.ropes) rope?.render();
 
-    // Actualizar la expresión del monstruo.
     if (this.target) {
-      this.target.update(this.candy, deltaTime);
+      this.target.update(this.candy);
       this.target.render();
     }
 
-    // Dibujar estrellas.
-    for (const star of this.stars) {
-      star.update();
-      star.render();
-    }
+    for (const star of this.stars) star.render();
 
-    // Dibujar el dulce.
-    if (this.candy) {
-      this.candy.render();
-    }
+    if (this.candy) this.candy.render();
 
-    // Notificar la victoria una sola vez.
     if (this.target && this.target.reached && !this.winNotified) {
       this.winNotified = true;
-      this.candy.delete();
-      while (!eatingAnimation.isFinished) {
-        await sleep(500);
-      }
+      if (this.candy) this.candy.delete();
 
-      if (
-        typeof gameState !== 'undefined' &&
-        gameState
-      ) {
-        if (typeof gameState.setWon === 'function') {
-          gameState.setWon();
-        } else if (typeof gameState.changeState === 'function') {
-          gameState.changeState('LEVEL_WON');
+      // Esperar a que termine la animación de masticar y notificar al GameState
+      setTimeout(() => {
+        if (typeof gameState !== 'undefined' && gameState) {
+          if (typeof gameState.setWon === 'function') gameState.setWon();
+          else if (typeof gameState.changeState === 'function') gameState.changeState('LEVEL_WON');
         }
-      }
+      }, 2000);
     }
+
 
     if (this.target && this.target.lost && !this.lossNotified && sadAnimation.isFinished) {
       this.lossNotified = true;

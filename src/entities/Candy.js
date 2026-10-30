@@ -5,14 +5,14 @@
  */
 
 class Candy {
-  constructor(physicsWorld, x, y, sprites, radius = CANDY_RADIUS) {
+  constructor(physicsWorld, x, y, sprites) {
     this.physicsWorld = physicsWorld;
-    this.radius = radius;
+    this.radius = CANDY_RADIUS;
     this.type = 'candy';
     this.sprites = sprites;
     this.eaten = false;
 
-    this.body = Matter.Bodies.circle(x, y, radius, {
+    this.body = Matter.Bodies.circle(x, y, this.radius, {
       label: CONFIG.LABELS.CANDY,
       restitution: 0.25,
       friction: 0.1,
@@ -27,11 +27,6 @@ class Candy {
     this.body.gameObject = this;
 
     this.physicsWorld.addBody(this.body);
-    
-    this.mascara = createGraphics(radius, radius);
-    this.mascara.fill(0);  
-    this.mascara.noStroke();
-    this.mascara.circle(radius/2, radius/2, MASCARA_RADIUS);
   }
 
   render() {
@@ -44,7 +39,6 @@ class Candy {
 
     imageMode(CENTER);
     for (let i = 0; i < CANDY_SPRITES.length; i++){
-      this.sprites[i].mask(this.mascara.get());
       image(this.sprites[i], 0, 0, this.radius*2, this.radius*2);
     }
 

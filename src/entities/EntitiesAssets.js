@@ -4,11 +4,19 @@ class EntitiesAssets {
         this.supportImg = null;
         this.starImg=null;
         this.omNomImg = null;
+
+        this.mascara = createGraphics(CANDY_RADIUS, CANDY_RADIUS);
+        this.mascara.fill(0);  
+        this.mascara.noStroke();
+        this.mascara.circle(CANDY_RADIUS/2, CANDY_RADIUS/2, MASCARA_RADIUS);
     }
 
     async preload(){
         this.candyImg = await loadImage('assets/entities/candy_sprite.png');
         candySprites = CANDY_SPRITES.map(({ x, y, w, h }) => this.candyImg.get(x, y, w, h));
+        for (let i = 0; i < CANDY_SPRITES.length; i++){
+            candySprites[i].mask(this.mascara.get());
+        }
 
         this.supportImg = await loadImage('assets/entities/support_sprite.png');
         supportSprite = SUPPORT_SPRITE.map(({ x, y, w, h }) => this.supportImg.get(x, y, w, h))[0];
