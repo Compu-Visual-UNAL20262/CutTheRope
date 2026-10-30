@@ -917,16 +917,16 @@ drawAudioButton() {
         }
 
         if (this.levelManager && typeof this.levelManager.loadLevel === 'function') {
-          this.levelManager.loadLevel(this.levelManager.currentLevel || 1);
+          this.levelManager.loadLevel(1);
         }
 
         // Switch state to PLAYING
         if (this.gameState && typeof this.gameState.changeState === 'function') {
           this.gameState.changeState('PLAYING');
         }
-        if (this.audioManager && typeof this.audioManager.fadeOutMenuMusic === 'function') {
-          this.audioManager.fadeOutMenuMusic(500);
-        }
+        // if (this.audioManager && typeof this.audioManager.fadeOutMenuMusic === 'function') {
+        //   this.audioManager.fadeOutMenuMusic(500);
+        // }
         return true;
       }
     } else if (this.gameState.currentState === "LEVEL_WON" || this.gameState.currentState === "LEVEL_LOST") {

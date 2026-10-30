@@ -87,9 +87,10 @@ class AudioManager {
   handleStateChange(newState, oldState) {
     if (newState === 'MENU') {
       this.playMenuMusic();
-    } else if (newState === 'PLAYING') {
-      this.fadeOutMenuMusic(500);
     }
+    // } else if (newState === 'PLAYING') {
+    //   this.fadeOutMenuMusic(500);
+    // }
   }
 
   /**
