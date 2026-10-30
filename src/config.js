@@ -24,7 +24,9 @@
     CANDY: 0x0002,
     ROPE: 0x0004,
     SENSOR: 0x0008
-  }
+  },
+
+  LOADING_SPEED: 0.005 // ~3.3s loading duration at 60 FPS
 };
 
 // Entities-related constants

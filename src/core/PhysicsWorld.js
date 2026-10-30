@@ -100,7 +100,16 @@ class PhysicsWorld {
    * Clears all bodies, constraints, and composites from the world
    */
   clearWorld() {
-    this.World.clear(this.world, false);
+    this.Composite.clear(this.world, false);
+    this.Engine.clear(this.engine);
+  }
+
+  /**
+   * Resets the physics world for a new level or restart, removing dynamic bodies
+   * and constraints while preserving registered collision listeners.
+   */
+  resetForNewLevel() {
+    this.Composite.clear(this.world, false);
     this.Engine.clear(this.engine);
   }
 
