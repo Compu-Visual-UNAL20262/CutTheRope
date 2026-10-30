@@ -10,6 +10,7 @@ class LevelManager {
     this.candy = null;
     this.target = null;
     this.bubble = null;
+    this.airCushions = [];
     this.stars = [];
     this.ropes = [];
 
@@ -33,6 +34,7 @@ class LevelManager {
     this.candy = null;
     this.target = null;
     this.bubble = null;
+    this.airCushions = [];
     this.stars = [];
     this.ropes = [];
   }
@@ -82,6 +84,21 @@ class LevelManager {
       ];
       this.ropes.push(new Rope(centerX, 170, 3, this.candy.body));
       this.bubble = new Bubble(this.physicsWorld, centerX, 370);
+    } else if (index === 4) {
+      // Nivel 4: usar los cojines para guiar el dulce hacia la burbuja y Om Nom.
+      this.candy = new Candy(this.physicsWorld, centerX-40, 250, candySprites);
+      this.target = new Target(this.physicsWorld, centerX-150, 90);
+      this.stars = [
+        new Star(this.physicsWorld, centerX-40, 500, () => this.collectedStars++),
+        new Star(this.physicsWorld, centerX+50, 400, () => this.collectedStars++),
+        new Star(this.physicsWorld, centerX-150, 200, () => this.collectedStars++)
+      ];
+      this.ropes.push(new Rope(centerX-40, 250, 4, this.candy.body));
+      this.bubble = new Bubble(this.physicsWorld, centerX-40, 500);
+      this.airCushions = [
+        new AirCushion(this.physicsWorld, centerX - 140, 620, -Math.PI / 4),
+        new AirCushion(this.physicsWorld, centerX + 140, 420, -3 * Math.PI / 4)
+      ];
     }
   }
 
@@ -89,6 +106,7 @@ class LevelManager {
   async render() {
     // Dibujar primero las cuerdas.
     for (const rope of this.ropes) rope?.render();
+    for (const airCushion of this.airCushions) airCushion.render();
 
     if (this.target) {
       this.target.update(this.candy);
