@@ -649,6 +649,7 @@ drawSuccessScreen() {
     this.drawSuccessButton(
         this.successButtons.home,
         UIAssets.btnMenu,
+        '☰'
     );
 }
 
@@ -706,11 +707,13 @@ drawSuccessButton(btn, sprite, label) {
         stroke(65, 110, 36);
         strokeWeight(3);
         rect(btn.x, btn.y, btn.w, btn.h, 12);
+    }
 
+    if (label) {
         noStroke();
         fill(255);
         textAlign(CENTER, CENTER);
-        textSize(16);
+        textSize(20);
         textStyle(BOLD);
         text(label, btn.x, btn.y);
     }
@@ -784,6 +787,7 @@ drawFailScreen() {
     this.drawSuccessButton(
         this.successButtons.home,
         UIAssets.btnMenu,
+        '☰'
     );
 }
 
@@ -853,6 +857,7 @@ drawLastScreen() {
     this.drawSuccessButton(
         this.successButtons.home,
         UIAssets.btnMenu,
+        '☰'
     );
 }
 
