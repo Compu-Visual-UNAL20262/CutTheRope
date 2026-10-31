@@ -114,19 +114,19 @@ CutTheRope/
 │   │   ├── controls_cursor.gif      # Animated cursor motion & trail icon (Smashicons)
 │   │   ├── controls_left_click.gif  # Animated left-click & slice icon (Smashicons)
 │   │   ├── cut_the_rope_cover.png   # High-resolution original promotional artwork
-│   │   └── ...                      # 15 Om Nom reaction and emotion GIFs (Tenor)
+│   │   └── ...                      # 14 Om Nom reaction and emotion GIFs (Tenor)
 │   ├── entities/                   # Entity sprites and interactive audio effects
 │   │   ├── candy_sprite.png        # Rotating swirl candy sprite sheet
 │   │   ├── monster_chewing.wav     # Om Nom chewing audio SFX
 │   │   ├── monster_open.wav        # Om Nom mouth open audio SFX
 │   │   ├── monster_sad.wav         # Om Nom sad sigh audio SFX
-│   │   ├── sprite.png              # Master Om Nom body sprite sheet
+│   │   ├── omnom_spritesheet.png   # Master Om Nom animated body sprite sheet
 │   │   ├── star_1.wav..star_3.wav  # Ascending star collection chimes
 │   │   ├── star_sprite.png         # Golden star rotation sprite sheet
 │   │   └── support_sprite.png      # Wooden pedestal sprite
 │   ├── favicon/                    # Web application icons and manifest
 │   ├── fonts/
-│   │   └── Fredoka/                # Fredoka rounded bold UI font family
+│   │   └── Fredoka/static/         # Fredoka_Condensed-Bold.ttf display font
 │   ├── mechanics/                  # Mechanics sprites and audio effects
 │   │   ├── bubble_attached.png     # Bubble surrounding candy sprite
 │   │   ├── bubble_sheet.png        # Bubble wobble & pop sprite sheet
@@ -135,24 +135,30 @@ CutTheRope/
 │   │   ├── pin.png                 # Static ceiling rope pin sprite
 │   │   ├── pop.mp3                 # Bubble popping audio SFX
 │   │   └── slice.mp3               # Rope slicing audio SFX
-│   ├── ui/
-│   │   ├── apptivity_banner.png    # Om Nom open mouth loading banner
-│   │   ├── apptivity_stars.png     # Decorative banner stars
-│   │   ├── background_cardboard_clean.jpg # Clean cardboard background texture
-│   │   ├── btn_default_normal.png  # 3D red pill button normal state (455x102)
-│   │   ├── btn_default_pressed.png # 3D yellow pill button pressed state (455x102)
-│   │   ├── btn_retry.png           # Level retry icon button
-│   │   ├── next_level.png          # Next level progression button
-│   │   ├── menu_button.png         # Menu return button
-│   │   ├── candy_swirl.png         # Swirl candy sprite
-│   │   ├── loaderbar_full.png      # Striped candy progress bar texture
-│   │   ├── menu_bgr_opt.jpg        # Optimized cardboard menu background
-│   │   ├── menu_candy_swirl.png    # 3D swirl candy with rope hole (164x163)
-│   │   ├── menu_shadow.png         # Ambient drop shadow and vignette overlay
-│   │   ├── omnom_idle.png          # Om Nom idle body sprite (128x133)
-│   │   ├── omnom_support.png       # Wooden pedestal stand sprite
-│   │   └── spinner.png             # Rotating candy wheel spinner
-│   └── sprites_test_nocomplete/    # Master sprite sheet archive
+│   └── ui/                         # Cleaned and standardized interface sprites
+│       ├── apptivity_banner.png    # Om Nom open mouth loading banner
+│       ├── apptivity_stars.png     # Decorative banner stars
+│       ├── audio_off.png           # Audio muted icon button
+│       ├── audio_on.png            # Audio playing icon button
+│       ├── bg_cardboard.jpg        # Clean cardboard background texture
+│       ├── bg_level_overlay.png    # Ambient victory / defeat backdrop
+│       ├── bg_menu.jpg             # Cardboard menu background
+│       ├── btn_default_normal.png  # 3D red pill button normal state (455x102)
+│       ├── btn_default_pressed.png # 3D yellow pill button pressed state (455x102)
+│       ├── btn_menu.png            # Menu return icon button
+│       ├── btn_next_level.png      # Next level progression button
+│       ├── btn_retry.png           # Level retry icon button
+│       ├── candy_swirl.png         # Swirl candy sprite fallback
+│       ├── loaderbar_full.png      # Striped candy progress bar texture
+│       ├── menu_candy_swirl.png    # 3D swirl candy with rope hole (164x163)
+│       ├── menu_shadow.png         # Ambient drop shadow and vignette overlay
+│       ├── omnom_artist.png        # Om Nom painter sprite for completion screen
+│       ├── omnom_idle.png          # Om Nom idle body sprite (128x133)
+│       ├── omnom_sad.png           # Om Nom sad reaction sprite for loss screen
+│       ├── omnom_support.png       # Wooden pedestal stand sprite
+│       ├── spinner.png             # Rotating candy wheel spinner
+│       ├── star_golden.png         # Golden star HUD & score icon
+│       └── star_translucent.png    # Uncollected translucent star HUD icon
 ├── lib/
 │   ├── matter.min.js               # Matter.js 2D physics engine
 │   ├── p5.min.js                   # p5.js core graphics library
@@ -234,7 +240,7 @@ All visual assets were obtained from community preservation archives and curated
   Character animation GIFs of Om Nom were sourced from [Tenor.com](https://tenor.com/) and adapted for documentation showcases and reactive visual feedback under non-commercial editorial sharing terms.
 
 <details>
-<summary><b>📋 Click to expand full Tenor GIF sources & credits (15 links)</b></summary>
+<summary><b>📋 Click to expand full Tenor GIF sources & credits (14 links)</b></summary>
 
 <br>
 
@@ -247,7 +253,6 @@ All visual assets were obtained from community preservation archives and curated
 | 😮 | Jaw Dropping | [Tenor](https://tenor.com/view/jaw-dropping-om-nom-nibble-nom-cut-the-rope-impressed-gif-8249317190795755440) | 😱 | Freaking Out | [Tenor](https://tenor.com/view/freaking-out-om-nom-cut-the-rope-screaming-going-crazy-gif-3927534681297224760) |
 | 🎉 | Excited | [Tenor](https://tenor.com/view/excited-om-nom-om-nom-stories-om-nom-and-cut-the-rope-happy-gif-26647750) | 🤩 | Wow | [Tenor](https://tenor.com/view/wow-om-nom-cut-the-rope-that's-amazing-i-love-this-gif-12346611675352339536) |
 | 🥊 | Ready to Fight | [Tenor](https://tenor.com/view/ready-to-fight-om-nom-om-nom-stories-fighting-stance-ready-to-brawl-gif-8029144922046973558) | 💋 | Kiss | [Tenor](https://tenor.com/view/kiss-on-the-cheek-om-nom-om-nom-stories-love-you-cut-the-rope-gif-17615010227572962049) |
-| 😴 | Yawn *(Reserve)* | [Tenor](https://tenor.com/view/yawn-om-nom-cut-the-rope-bored-falling-asleep-gif-26818518) | | | |
 
 </details>
 

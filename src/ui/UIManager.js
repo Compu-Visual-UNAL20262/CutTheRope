@@ -100,19 +100,19 @@ const UIAssets = {
   btnRetry: null,
 
   preload() {
-    this.menuBgr = loadSafeImage('menuBgr', 'assets/ui/menu_bgr_opt.jpg');
+    this.menuBgr = loadSafeImage('menuBgr', 'assets/ui/bg_menu.jpg');
     this.menuShadow = loadSafeImage('menuShadow', 'assets/ui/menu_shadow.png');
-    this.star = loadSafeImage('star', 'assets/ui/golden_star.png');
-    this.startranslucent = loadSafeImage('startranslucent', 'assets/ui/translucent_star.png');
-    this.nextLevelBg= loadSafeImage('nextLevelBg', 'assets/ui/menu_bgr_hd.png'); //listo
+    this.star = loadSafeImage('star', 'assets/ui/star_golden.png');
+    this.startranslucent = loadSafeImage('startranslucent', 'assets/ui/star_translucent.png');
+    this.nextLevelBg= loadSafeImage('nextLevelBg', 'assets/ui/bg_level_overlay.png'); //listo
     //this.successTitle= loadSafeImage('successTitle', 'assets/ui/success_title.png');
     //this.starsLevel= loadSafeImage('starsLevel', 'assets/ui/stars_level.png');
-    this.onNomSad = loadSafeImage('omNomSad', 'assets/ui/omNomSad.png'); //listo
-    this.btnNextLevel = loadSafeImage('btnNextLevel', 'assets/ui/next_level.png'); //listo
-    this.btnMenu = loadSafeImage('btnMenu', 'assets/ui/menu_button.png'); //listo
+    this.onNomSad = loadSafeImage('omNomSad', 'assets/ui/omnom_sad.png'); //listo
+    this.btnNextLevel = loadSafeImage('btnNextLevel', 'assets/ui/btn_next_level.png'); //listo
+    this.btnMenu = loadSafeImage('btnMenu', 'assets/ui/btn_menu.png'); //listo
     this.btnRetry = loadSafeImage('btnRetry', 'assets/ui/btn_retry.png'); //listo 
-    this.audiooff = loadSafeImage('noaudio', 'assets/ui/no_audio.png');
-    this.audioon = loadSafeImage('audio_active', 'assets/ui/audio_activo.png');
+    this.audiooff = loadSafeImage('noaudio', 'assets/ui/audio_off.png');
+    this.audioon = loadSafeImage('audio_active', 'assets/ui/audio_on.png');
     this.btnNormal = loadSafeImage('btnNormal', 'assets/ui/btn_default_normal.png');
     this.btnPressed = loadSafeImage('btnPressed', 'assets/ui/btn_default_pressed.png');
     this.omnomIdle = loadSafeImage('omnomIdle', 'assets/ui/omnom_idle.png');
@@ -122,7 +122,7 @@ const UIAssets = {
     this.menuCandySwirl = loadSafeImage('menuCandySwirl', 'assets/ui/menu_candy_swirl.png');
     this.spinner = loadSafeImage('spinner', 'assets/ui/spinner.png');
     this.loaderbar = loadSafeImage('loaderbar', 'assets/ui/loaderbar_full.png');
-    this.cardboardBg = loadSafeImage('cardboardBg', 'assets/ui/background_cardboard_clean.jpg');
+    this.cardboardBg = loadSafeImage('cardboardBg', 'assets/ui/bg_cardboard.jpg');
     this.apptivityBanner = loadSafeImage('apptivityBanner', 'assets/ui/apptivity_banner.png');
     this.apptivityStars = loadSafeImage('apptivityStars', 'assets/ui/apptivity_stars.png');
     this.loaded = true;

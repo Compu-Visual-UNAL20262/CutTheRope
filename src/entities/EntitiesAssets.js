@@ -29,7 +29,7 @@ class EntitiesAssets {
         let starAnimSprites = STAR_SPRITES.animation.frames.map(({ x, y, w, h }) => this.starImg.get(x, y, w, h));
         starAnimation = new SpriteAnimation(starAnimSprites, STAR_SPRITES.animation.frameRate, STAR_SPRITES.animation.loop);
 
-        this.omNomImg = await loadImage('assets/entities/sprite.png');
+        this.omNomImg = await loadImage('assets/entities/omnom_spritesheet.png');
         let idleOnNomSprites = OMNOM_SPRITES.idle.frames.map(({ x, y, w, h }) => this.omNomImg.get(x, y, w, h));
         let openMouthOnNomSprites = OMNOM_SPRITES.openMouth.frames.map(({ x, y, w, h }) => this.omNomImg.get(x, y, w, h));
         let eatingOnNomSprites = OMNOM_SPRITES.eating.frames.map(({ x, y, w, h }) => this.omNomImg.get(x, y, w, h));
