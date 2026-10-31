@@ -78,6 +78,7 @@ const UIAssets = {
   btnPressed: null,
   omnomIdle: null,
   onNomSad: null,
+  omNomArtist: null,
   omnomSupport: null,
   candySwirl: null,
   spinner: null,
@@ -115,6 +116,7 @@ const UIAssets = {
     this.btnNormal = loadSafeImage('btnNormal', 'assets/ui/btn_default_normal.png');
     this.btnPressed = loadSafeImage('btnPressed', 'assets/ui/btn_default_pressed.png');
     this.omnomIdle = loadSafeImage('omnomIdle', 'assets/ui/omnom_idle.png');
+    this.omNomArtist = loadSafeImage('omNomArtist', 'assets/ui/omnom_artist.png');
     this.omnomSupport = loadSafeImage('omnomSupport', 'assets/ui/omnom_support.png');
     this.candySwirl = loadSafeImage('candySwirl', 'assets/ui/candy_swirl.png');
     this.menuCandySwirl = loadSafeImage('menuCandySwirl', 'assets/ui/menu_candy_swirl.png');
@@ -769,6 +771,75 @@ drawFailScreen() {
             height / 2 - 115 + 80+50,
             100,
             100,
+            true
+        );
+
+    // Botones
+
+    this.drawSuccessButton(
+        this.successButtons.replay,
+        UIAssets.btnRetry,
+    );
+
+    this.drawSuccessButton(
+        this.successButtons.home,
+        UIAssets.btnMenu,
+    );
+}
+
+drawLastScreen() {
+    // Fondo
+    if (UIAssets.nextLevelBg?.isReady) {
+        drawSafe(UIAssets.nextLevelBg, 0, 0, width+180, height+180);
+    } else {
+        background(244, 211, 151);
+    }
+
+    // Sombra para darle profundidad al panel
+    push();
+    rectMode(CENTER);
+    noStroke();
+    fill(70, 43, 25, 75);
+    rect(width / 2, (height / 2) +20 + 8, 340, 350, 28);
+
+    // Panel central
+    fill(255, 239, 196);
+    stroke(145, 93, 48);
+    strokeWeight(5);
+    rect(width / 2, (height / 2) +20, 340, 350, 28);
+    pop();
+
+    // Título
+
+
+        push();
+        fill(101, 63, 30);
+        noStroke();
+        textFont("Fredoka");
+        textAlign(CENTER, CENTER);
+        textSize(28);
+        textStyle(BOLD);
+        text("¡Estamos creando", width / 2, height / 2 - 115);
+        pop();
+
+        push();
+        fill(101, 63, 30);
+        noStroke();
+        textFont("Fredoka");
+        textAlign(CENTER, CENTER);
+        textSize(28);
+        textStyle(BOLD);
+        text("los siguientes niveles!", width / 2, height / 2 - 80);
+        pop();
+
+
+    // Om Nom en construcción
+    drawSafe(
+            UIAssets.omNomArtist,
+            width / 2,
+            height / 2 - 115 + 80+50,
+            200,
+            150,
             true
         );
 

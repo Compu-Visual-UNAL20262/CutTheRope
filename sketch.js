@@ -180,18 +180,26 @@ function draw() {
       break;
 
     case 'LEVEL_WON':
-      uiManager.drawSuccessScreen();
-      break;
+      if (levelManager.currentLevel === 4) {
+        uiManager.drawLastScreen();
+         break;
+      }
+      else{
+        uiManager.drawSuccessScreen();
+        break;
+      }
+      
     case 'LEVEL_LOST':
       uiManager.drawFailScreen();
       break;
-    case 'GAME_COMPLETED':
+    case 'GAME_COMPLETED' :
       // Render overlay for completion/failure states
-      if (uiManager && typeof uiManager.drawOverlay === 'function') {
+            if (uiManager && typeof uiManager.drawOverlay === 'function') {
         uiManager.drawOverlay(currentState);
       } else {
         drawFallbackScreen(currentState, 'Click to continue');
       }
+      uiManager.drawGameCompletedScreen();
       break;
 
     default:
