@@ -783,7 +783,7 @@ drawFailScreen() {
 
     this.drawSuccessButton(
         this.successButtons.replay,
-        UIAssets.btnRetry,
+        UIAssets.btnMenu,
         '↻'
     );
 
@@ -854,7 +854,7 @@ drawLastScreen() {
 
     this.drawSuccessButton(
         this.successButtons.replay,
-        UIAssets.btnRetry,
+        UIAssets.btnMenu,
         '↻'
     );
 
