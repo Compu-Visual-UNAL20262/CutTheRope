@@ -106,7 +106,8 @@ The project was developed under a contract-driven modular architecture where eac
 ```text
 CutTheRope/
 ├── assets/
-│   ├── 06.-Menu-Music-Theme.wav    # Master menu background theme music (PCM WAV)
+│   ├── audio/
+│   │   └── menu_theme.wav          # Master menu background theme music (PCM WAV)
 │   ├── cursor/
 │   │   ├── cursor.png              # White Wii-style pointer idle sprite
 │   │   └── cursor_pressed.png      # Pointer pressed state sprite
@@ -288,7 +289,7 @@ The audio pipeline cleanly distinguishes between the ambient soundtrack and inte
 
 - **Menu Theme Soundtrack:**
   Sourced from [Khinsider – Cut the Rope Arcade Gamerip (2016)](https://downloads.khinsider.com/game-soundtracks/album/cut-the-rope-arcade-gamerip-2016).
-  - File: [`assets/06.-Menu-Music-Theme.wav`](assets/06.-Menu-Music-Theme.wav)
+  - File: [`assets/audio/menu_theme.wav`](assets/audio/menu_theme.wav)
   - Format: Uncompressed 16-bit PCM WAV, 22,050 Hz Mono, 60.01 seconds seamless loop.
 
 - **Interactive Gameplay Sound Effects (SFX):**
@@ -339,7 +340,7 @@ Modern web browsers enforce strict security restrictions regarding audio playbac
 The following items represent architectural compromises, design differences, or features scheduled for subsequent development phases:
 
 - **Single Background Soundtrack (Limited Audio Palette):**
-  The game currently features only one of the multiple soundtracks available in the original release ([`assets/06.-Menu-Music-Theme.wav`](assets/06.-Menu-Music-Theme.wav)), looping continuously across states. It lacks the varied in-game world soundtracks (e.g., Cardboard Box, Fabric Box, Foil Box, Magic Box themes) as well as the commercial game's dynamic victory and defeat musical jingles.
+  The game currently features only one of the multiple soundtracks available in the original release ([`assets/audio/menu_theme.wav`](assets/audio/menu_theme.wav)), looping continuously across states. It lacks the varied in-game world soundtracks (e.g., Cardboard Box, Fabric Box, Foil Box, Magic Box themes) as well as the commercial game's dynamic victory and defeat musical jingles.
 - **Menu & UI Buttons with Text Labels (Non-Original Graphics):**
   The main menu and overlay action buttons use generic glossy pill capsules styled with programmatically rendered text labels via Canvas (`text('START')`, `text('NEXT')`, `text('RETRY')`, `text('MENU')`) rather than the bespoke, stylized typography and integrated iconography from the original game assets.
 - **Absence of Level Persistence & Save History:**

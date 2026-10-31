@@ -38,7 +38,7 @@ class AudioManager {
       if (existing) {
         this.menuMusic = existing;
       } else if (typeof Audio !== 'undefined') {
-        this.menuMusic = new Audio('assets/06.-Menu-Music-Theme.wav');
+        this.menuMusic = new Audio('assets/audio/menu_theme.wav');
       }
 
       if (this.menuMusic) {
