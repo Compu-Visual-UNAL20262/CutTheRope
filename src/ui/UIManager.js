@@ -638,12 +638,14 @@ drawSuccessScreen() {
     // Botones
     this.drawSuccessButton(
         this.successButtons.next,
-        UIAssets.btnNextLevel,
+        UIAssets.btnMenu,
+        '➤'
     );
 
     this.drawSuccessButton(
         this.successButtons.replay,
-        UIAssets.btnRetry,
+        UIAssets.btnMenu,
+        '↻'
     );
 
     this.drawSuccessButton(
@@ -658,14 +660,14 @@ initSuccessButtons() {
         next: {
             x: width / 2,
             y: height / 2 + 145,
-            w: 70,
-            h: 70
+            w: 80,
+            h: 42
         },
         replay: {
             x: width / 2 - 100,
             y: height / 2 + 145,
-            w: 65,
-            h: 65
+            w: 80,
+            h: 42
         },
         home: {
             x: width / 2 + 100,
@@ -782,6 +784,7 @@ drawFailScreen() {
     this.drawSuccessButton(
         this.successButtons.replay,
         UIAssets.btnRetry,
+        '↻'
     );
 
     this.drawSuccessButton(
@@ -852,6 +855,7 @@ drawLastScreen() {
     this.drawSuccessButton(
         this.successButtons.replay,
         UIAssets.btnRetry,
+        '↻'
     );
 
     this.drawSuccessButton(
