@@ -26,6 +26,7 @@ class Rope {
     this.pinBody = null;
     this.nodes = [];
     this.constraints = [];
+    this._beforeUpdateHandler = null;
 
     // Cut & visual fade state
     this.isCut = false;
@@ -59,16 +60,14 @@ class Rope {
     const stiffness = typeof ROPE_STIFFNESS !== 'undefined' ? ROPE_STIFFNESS : 1.0;
     const damping = typeof ROPE_DAMPING !== 'undefined' ? ROPE_DAMPING : 0.0;
 
-    // Ensure high constraint solver iterations on the engine for taut multi-segment ropes
+    // Ensure high constraint solver iterations on the engine once for taut multi-segment ropes
     if (this.physicsWorld && this.physicsWorld.engine) {
-      this.physicsWorld.engine.constraintIterations = Math.max(
-        this.physicsWorld.engine.constraintIterations || 2,
-        10
-      );
-      this.physicsWorld.engine.positionIterations = Math.max(
-        this.physicsWorld.engine.positionIterations || 6,
-        10
-      );
+      if ((this.physicsWorld.engine.constraintIterations || 0) < 20) {
+        this.physicsWorld.engine.constraintIterations = 20;
+      }
+      if ((this.physicsWorld.engine.positionIterations || 0) < 20) {
+        this.physicsWorld.engine.positionIterations = 20;
+      }
     }
 
     // 1. Create static anchor Pin body (sensor/non-colliding so it never blocks entities)
@@ -88,9 +87,10 @@ class Rope {
     }
 
     // 2. Determine target endpoint and segment length
+    const physSegments = Math.max(5, Math.min(this.segments, 14));
     let endX = this.pinX;
     let endY = this.pinY + this.segments * defaultSegLen;
-    let segmentLength = defaultSegLen;
+    let totalRopeLength = this.segments * defaultSegLen;
 
     if (this.candyBody && this.candyBody.position) {
       const dx = this.candyBody.position.x - this.pinX;
@@ -100,45 +100,36 @@ class Rope {
 
       if (!this.candyBody._hasPrimaryRope) {
         // First rope attached to this candy: align candy at full rope length along its initial angle
-        // so the pendulum swings cleanly through level stars without compression snap.
+        // so the pendulum swings cleanly through level stars.
         this.candyBody._hasPrimaryRope = true;
-
-        if (initialDist > 1 && initialDist < targetTotalLength) {
-          const ux = dx / initialDist;
-          const uy = dy / initialDist;
-          endX = this.pinX + ux * targetTotalLength;
-          endY = this.pinY + uy * targetTotalLength;
-          Body.setPosition(this.candyBody, { x: endX, y: endY });
-          Body.setVelocity(this.candyBody, { x: 0, y: 0 });
-          segmentLength = defaultSegLen;
-        } else if (initialDist >= targetTotalLength) {
-          endX = this.candyBody.position.x;
-          endY = this.candyBody.position.y;
-          segmentLength = initialDist / this.segments;
-        } else {
-          endX = this.pinX;
-          endY = this.pinY + targetTotalLength;
-          Body.setPosition(this.candyBody, { x: endX, y: endY });
-          segmentLength = defaultSegLen;
-        }
+        const ux = initialDist > 1 ? dx / initialDist : 0;
+        const uy = initialDist > 1 ? dy / initialDist : 1;
+        totalRopeLength = Math.max(initialDist, targetTotalLength);
+        endX = this.pinX + ux * totalRopeLength;
+        endY = this.pinY + uy * totalRopeLength;
+        Body.setPosition(this.candyBody, { x: endX, y: endY });
+        Body.setVelocity(this.candyBody, { x: 0, y: 0 });
       } else {
         // Secondary rope attached to the same candy: adapt segment length to current distance
         endX = this.candyBody.position.x;
         endY = this.candyBody.position.y;
-        segmentLength = Math.max(8, initialDist / this.segments);
+        totalRopeLength = Math.max(initialDist, this.segments * 10.0);
       }
     }
 
-    // 3. Create (segments - 1) intermediate rope nodes interpolated between Pin and endpoint
-    const numNodes = this.segments - 1;
+    const segLen = totalRopeLength / physSegments;
+
+    // 3. Create intermediate rope nodes interpolated between Pin and endpoint
+    const nodeDensity = 0.006;
+    const numNodes = physSegments - 1;
     for (let i = 1; i <= numNodes; i++) {
-      const t = i / this.segments;
+      const t = i / physSegments;
       const nx = this.pinX + (endX - this.pinX) * t;
       const ny = this.pinY + (endY - this.pinY) * t;
 
       const node = Bodies.circle(nx, ny, nodeRadius, {
         label: nodeLabel,
-        density: 0.04,
+        density: nodeDensity,
         friction: 0.05,
         frictionAir: 0.005,
         restitution: 0.0,
@@ -156,7 +147,6 @@ class Rope {
       this.physicsWorld.addBody(this.nodes);
     }
 
-    // 4. Connect chain of bodies with Matter.Constraint: Pin -> Node_0 -> ... -> Node_(n-1) -> candyBody
     const chainBodies = [this.pinBody, ...this.nodes];
     if (this.candyBody) {
       chainBodies.push(this.candyBody);
@@ -171,7 +161,7 @@ class Rope {
         bodyB: bodyB,
         pointA: { x: 0, y: 0 },
         pointB: { x: 0, y: 0 },
-        length: segmentLength,
+        length: segLen,
         stiffness: stiffness,
         damping: damping
       });
@@ -182,6 +172,50 @@ class Rope {
 
     if (this.physicsWorld && this.constraints.length > 0) {
       this.physicsWorld.addConstraint(this.constraints);
+    }
+
+    if (this.physicsWorld && this.physicsWorld.Events && this.physicsWorld.engine && this.candyBody) {
+      this._beforeUpdateHandler = () => {
+        if (this.isCut || this.destroyed || !this.candyBody || !this.candyBody.position) return;
+        const rx = this.candyBody.position.x - this.pinX;
+        const ry = this.candyBody.position.y - this.pinY;
+        const d = Math.hypot(rx, ry);
+        if (d > totalRopeLength) {
+          const ux = rx / d;
+          const uy = ry / d;
+          const tx = -uy;
+          const ty = ux;
+          const targetLen = Math.min(totalRopeLength * 1.08, totalRopeLength + (d - totalRopeLength) * 0.75);
+          const nx = this.pinX + ux * targetLen;
+          const ny = this.pinY + uy * targetLen;
+          const vx = this.candyBody.velocity ? this.candyBody.velocity.x : 0;
+          const vy = this.candyBody.velocity ? this.candyBody.velocity.y : 0;
+          const vr = vx * ux + vy * uy;
+          let vt = vx * tx + vy * ty;
+
+          Body.setPosition(this.candyBody, { x: nx, y: ny });
+          if (vr > 0) {
+            if (Math.abs(vt) > 0.1) {
+              const sign = vt >= 0 ? 1 : -1;
+              vt = sign * Math.hypot(vt, vr * 0.85);
+            }
+            const nextVr = vr * 0.38;
+            Body.setVelocity(this.candyBody, { x: vt * tx + nextVr * ux, y: vt * ty + nextVr * uy });
+          }
+
+          const blend = 0.08;
+          for (let i = 0; i < this.nodes.length; i++) {
+            const t = (i + 1) / physSegments;
+            const targetX = this.pinX + ux * (targetLen * t);
+            const targetY = this.pinY + uy * (targetLen * t);
+            Body.setPosition(this.nodes[i], {
+              x: this.nodes[i].position.x + (targetX - this.nodes[i].position.x) * blend,
+              y: this.nodes[i].position.y + (targetY - this.nodes[i].position.y) * blend
+            });
+          }
+        }
+      };
+      this.physicsWorld.Events.on(this.physicsWorld.engine, 'afterUpdate', this._beforeUpdateHandler);
     }
   }
 
@@ -241,9 +275,23 @@ class Rope {
     }
 
     this.constraints.splice(idx, 1);
+
+    this.detachEvents();
     this.isCut = true;
 
     return cutPoint;
+  }
+
+  detachEvents() {
+    if (
+      this._beforeUpdateHandler &&
+      this.physicsWorld &&
+      this.physicsWorld.Events &&
+      this.physicsWorld.engine
+    ) {
+      this.physicsWorld.Events.off(this.physicsWorld.engine, 'afterUpdate', this._beforeUpdateHandler);
+      this._beforeUpdateHandler = null;
+    }
   }
 
   /**
@@ -251,6 +299,21 @@ class Rope {
    */
   render() {
     if (this.destroyed) return;
+
+    // If the physics world was cleared on level restart/change, mark stale rope as destroyed
+    if (
+      this.pinBody &&
+      this.physicsWorld &&
+      this.physicsWorld.world &&
+      Array.isArray(this.physicsWorld.world.bodies) &&
+      this.physicsWorld.world.bodies.indexOf(this.pinBody) === -1
+    ) {
+      this.detachEvents();
+      this.destroyed = true;
+      this.constraints = [];
+      this.nodes = [];
+      return;
+    }
 
     // Fade out severed rope tails smoothly and clean up bodies once invisible
     if (this.isCut) {
@@ -329,19 +392,12 @@ class Rope {
       // Pass 3: Subtle lighter highlight along the rope
       stroke(230, 190, 135, this.alpha * 0.75);
       strokeWeight(1.2);
-      for (let i = 0; i < pts.length - 1; i++) {
-        const p1 = pts[i];
-        const p2 = pts[i + 1];
-        const mx = (p1.x + p2.x) * 0.5;
-        const my = (p1.y + p2.y) * 0.5;
-        line(p1.x, p1.y, mx, my);
-      }
+      this.drawSmoothChain(pts);
     }
   }
 
   /**
    * Draws a smooth curve through an array of {x, y} points using vertex interpolation
-   * (compatible with both p5.js 1.x and p5.js 2.x).
    * @param {Array<{x: number, y: number}>} pts
    */
   drawSmoothChain(pts) {
@@ -353,7 +409,7 @@ class Rope {
     beginShape();
     vertex(pts[0].x, pts[0].y);
 
-    const steps = 4;
+    const steps = 8;
     for (let i = 0; i < pts.length - 1; i++) {
       const p0 = pts[i];
       const p1 = pts[i + 1];
@@ -389,42 +445,41 @@ class Rope {
     push();
     translate(this.pinX, this.pinY);
 
-    if (
+    const drewSprite = (
       typeof MechanicsAssets !== 'undefined' &&
       MechanicsAssets &&
-      MechanicsAssets.pinImg &&
-      MechanicsAssets.pinImg.width > 0
-    ) {
-      imageMode(CENTER);
-      image(MechanicsAssets.pinImg, 0, 0, 28, 28);
+      typeof MechanicsAssets.drawImageOrRegion === 'function' &&
+      MechanicsAssets.drawImageOrRegion(MechanicsAssets.pinImg, 0, 0, 28, 28)
+    );
+
+    if (drewSprite) {
       pop();
       return;
     }
 
-    // Vector pin matching Cut the Rope hook aesthetic (obj_hook_01_hd.png)
     // Drop shadow
     noStroke();
     fill(30, 20, 10, 75);
     circle(1, 2.5, 24);
 
-    // Outer metallic blue-gray base ring
+    // Outer metallic base ring
     stroke(38, 52, 64);
     strokeWeight(2.2);
     fill(104, 158, 198);
     circle(0, 0, 21);
 
-    // Inner shaded recess
+    // Inner recess
     noStroke();
     fill(66, 108, 140);
     circle(1, 1.5, 13);
 
-    // Center light-blue pin knob
+    // Center light-blue knob
     stroke(38, 52, 64);
     strokeWeight(1.8);
     fill(145, 222, 255);
     circle(0, 0, 9.5);
 
-    // Specular highlight dot
+    // highlight dot
     noStroke();
     fill(255, 255, 255, 210);
     circle(-1.5, -1.5, 3);
@@ -436,6 +491,7 @@ class Rope {
    * Removes intermediate nodes and constraints from the physics world after fade-out, keeping the pin visual.
    */
   destroyNodesAndConstraints() {
+    this.detachEvents();
     if (this.physicsWorld) {
       for (let i = 0; i < this.constraints.length; i++) {
         this.physicsWorld.removeConstraint(this.constraints[i]);
@@ -448,9 +504,7 @@ class Rope {
     this.nodes = [];
   }
 
-  /**
-   * Completely removes all bodies (including Pin) and constraints of this rope from PhysicsWorld.
-   */
+  // Completely removes all bodies (including Pin) and constraints of this rope from PhysicsWorld.
   destroy() {
     this.destroyNodesAndConstraints();
     if (this.physicsWorld && this.pinBody) {

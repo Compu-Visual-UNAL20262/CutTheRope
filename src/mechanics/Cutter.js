@@ -19,9 +19,6 @@ class Cutter {
 
     // Set of ropes already severed during the current frame/step to avoid multi-shredding
     this.cutCooldownMap = new WeakMap();
-
-    // Web Audio API context for procedural slice sound fallback
-    this.audioCtx = null;
   }
 
   /**
@@ -336,14 +333,13 @@ class Cutter {
   }
 
   /**
-   * Plays slice.mp3 from MechanicsAssets if loaded, or synthesizes a crisp blade swish via Web Audio API.
+   * Plays assets/mechanics/slice.mp3 from MechanicsAssets respecting audioManager.isMuted.
    */
   playSliceSound() {
     if (typeof audioManager !== 'undefined' && audioManager && audioManager.isMuted) {
       return;
     }
 
-    // 1. Try loaded asset from MechanicsAssets if available
     if (
       typeof MechanicsAssets !== 'undefined' &&
       MechanicsAssets &&
@@ -355,58 +351,14 @@ class Cutter {
           if (typeof snd.currentTime === 'number') {
             snd.currentTime = 0;
           }
-          snd.play();
-          return;
+          const playPromise = snd.play();
+          if (playPromise && typeof playPromise.catch === 'function') {
+            playPromise.catch(() => {});
+          }
         }
-      } catch (e) {
-        // Fallback to procedural sound below
+      } catch (err) {
+        // Ignore browser autoplay restrictions
       }
-    }
-
-    // 2. Procedural Web Audio API blade slice swish
-    try {
-      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-      if (!AudioContextClass) return;
-
-      if (!this.audioCtx) {
-        this.audioCtx = new AudioContextClass();
-      }
-      if (this.audioCtx.state === 'suspended') {
-        this.audioCtx.resume();
-      }
-
-      const ctx = this.audioCtx;
-      const duration = 0.095;
-      const sampleRate = ctx.sampleRate;
-      const bufferSize = Math.floor(sampleRate * duration);
-      const buffer = ctx.createBuffer(1, bufferSize, sampleRate);
-      const data = buffer.getChannelData(0);
-
-      for (let i = 0; i < bufferSize; i++) {
-        const env = Math.sin((i / bufferSize) * Math.PI);
-        data[i] = (Math.random() * 2 - 1) * env;
-      }
-
-      const noise = ctx.createBufferSource();
-      noise.buffer = buffer;
-
-      const filter = ctx.createBiquadFilter();
-      filter.type = 'bandpass';
-      filter.frequency.setValueAtTime(2200, ctx.currentTime);
-      filter.frequency.exponentialRampToValueAtTime(650, ctx.currentTime + duration);
-      filter.Q.value = 1.8;
-
-      const gain = ctx.createGain();
-      gain.gain.setValueAtTime(0.28, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + duration);
-
-      noise.connect(filter);
-      filter.connect(gain);
-      gain.connect(ctx.destination);
-
-      noise.start();
-    } catch (err) {
-      // Ignore audio errors if blocked by browser
     }
   }
 
@@ -416,13 +368,29 @@ class Cutter {
   render() {
     push();
 
-    // Render active AirCushion instances if LevelManager did not already draw them this frame
+    const currFrame = typeof frameCount === 'number' ? frameCount : -999;
+
+    // 1. Render active AirCushion instances if LevelManager did not already draw them this frame
     if (typeof AirCushion !== 'undefined' && Array.isArray(AirCushion.activeInstances)) {
-      const currFrame = typeof frameCount === 'number' ? frameCount : -999;
       for (let i = 0; i < AirCushion.activeInstances.length; i++) {
         const c = AirCushion.activeInstances[i];
         if (c && !c.destroyed && c._lastRenderFrame !== currFrame) {
           c.render();
+        }
+      }
+    }
+
+    // 2. Prune stale Bubble instances and render active ones if not already drawn this frame
+    if (typeof Bubble !== 'undefined') {
+      if (typeof Bubble.pruneStaleInstances === 'function') {
+        Bubble.pruneStaleInstances();
+      }
+      if (Array.isArray(Bubble.activeInstances)) {
+        for (let i = 0; i < Bubble.activeInstances.length; i++) {
+          const b = Bubble.activeInstances[i];
+          if (b && !b.destroyed && b._lastRenderFrame !== currFrame) {
+            b.render();
+          }
         }
       }
     }

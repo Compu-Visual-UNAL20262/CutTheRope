@@ -1,12 +1,10 @@
 /**
  * src/mechanics/Gimmicks.js
- * Special physics mechanics: Anti-gravity Bubble (Bubble), Air Cushion (AirCushion),
+ * Bubble (Bubble), Air Cushion (AirCushion),
  * and decentralized asset loader (MechanicsAssets).
- * Responsibility: Farid [BASE + Mechanics]
  */
 
 /**
- * Decentralized asset manager for Farid's mechanics module.
  * Invoked automatically by sketch.js inside preload().
  */
 const MechanicsAssets = {
@@ -20,8 +18,7 @@ const MechanicsAssets = {
   loaded: false,
 
   /**
-   * Loads a sprite image supporting both p5.js v2.x Promise-based loadImage()
-   * and native HTMLImageElement for instant availability and file:// CORS fallback.
+   * Loads a sprite image.
    * @param {string} path
    * @param {string} key
    */
@@ -51,7 +48,7 @@ const MechanicsAssets = {
   },
 
   /**
-   * Checks whether a loaded image (p5.Image or HTMLImageElement) is decoded and ready to draw.
+   * Checks whether a loaded image is decoded and ready to draw.
    * @param {Object|HTMLImageElement|null} img
    * @returns {boolean}
    */
@@ -69,7 +66,7 @@ const MechanicsAssets = {
   },
 
   /**
-   * Returns the underlying drawable canvas/image element for CanvasRenderingContext2D.drawImage.
+   * Returns the underlying drawable canvas/image element.
    * @param {Object|HTMLImageElement|null} img
    * @returns {HTMLImageElement|HTMLCanvasElement|null}
    */
@@ -82,8 +79,7 @@ const MechanicsAssets = {
   },
 
   /**
-   * Draws an image or spritesheet sub-region centered at (dx, dy) with size (dw, dh),
-   * compatible with both p5.Image and HTMLImageElement under active p5 transforms.
+   * Draws an image or spritesheet sub-region centered at (dx, dy) with size (dw, dh).
    * @param {Object|HTMLImageElement|null} img
    * @param {number} dx - Center X in current coordinate space
    * @param {number} dy - Center Y in current coordinate space
@@ -133,51 +129,58 @@ const MechanicsAssets = {
     return false;
   },
 
+  loadSound(path, key) {
+    if (typeof Audio === 'undefined') return;
+    try {
+      const snd = new Audio(path);
+      snd.preload = 'auto';
+      snd.addEventListener('error', () => {
+        this[key] = null;
+      });
+      snd.load();
+      this[key] = snd;
+    } catch (err) {
+      this[key] = null;
+    }
+  },
+
+  playSound(snd) {
+    if (typeof audioManager !== 'undefined' && audioManager && audioManager.isMuted) return;
+    if (snd && typeof snd.play === 'function') {
+      try {
+        if (typeof snd.currentTime === 'number') snd.currentTime = 0;
+        const playPromise = snd.play();
+        if (playPromise && typeof playPromise.catch === 'function') {
+          playPromise.catch(() => {});
+        }
+      } catch (err) {
+        // Ignore browser autoplay restrictions
+      }
+    }
+  },
+
   preload() {
     if (this.loaded) return;
 
-    // 1. Preload all 4 mechanics sprites
+    // Preload all 4 mechanics sprites
     this.loadSprite('assets/mechanics/bubble_sheet.png', 'bubbleSheet');
     this.loadSprite('assets/mechanics/bubble_attached.png', 'bubbleAttachedSheet');
     this.loadSprite('assets/mechanics/cushion.png', 'cushionSheet');
     this.loadSprite('assets/mechanics/pin.png', 'pinImg');
 
-    // 2. Preload all 3 mechanics sound effects with preload = 'auto'
-    if (typeof Audio !== 'undefined') {
-      try {
-        this.sliceSound = new Audio('assets/mechanics/slice.mp3');
-        this.sliceSound.preload = 'auto';
-        this.sliceSound.addEventListener('error', () => {
-          this.sliceSound = null;
-        });
-        this.sliceSound.load();
-
-        this.popSound = new Audio('assets/mechanics/pop.mp3');
-        this.popSound.preload = 'auto';
-        this.popSound.addEventListener('error', () => {
-          this.popSound = null;
-        });
-        this.popSound.load();
-
-        this.cushionSound = new Audio('assets/mechanics/cushion.mp3');
-        this.cushionSound.preload = 'auto';
-        this.cushionSound.addEventListener('error', () => {
-          this.cushionSound = null;
-        });
-        this.cushionSound.load();
-      } catch (err) {
-        // Fallback procedural Web Audio API will be used
-      }
-    }
+    // Preload all 3 mechanics sound effects
+    this.loadSound('assets/mechanics/slice.mp3', 'sliceSound');
+    this.loadSound('assets/mechanics/pop.mp3', 'popSound');
+    this.loadSound('assets/mechanics/cushion.mp3', 'cushionSound');
 
     this.loaded = true;
   }
 };
 
 /**
- * Bubble (Anti-gravity Bubble Mechanic)
- * Static sensor that captures the candy on contact, applies upward buoyancy force
- * each physics frame to invert gravity, and pops when clicked by the player.
+ * Bubble 
+ * Static sensor that captures the candy on contact, applies upward force
+ * and pops when clicked by the player
  */
 class Bubble {
   static activeInstances = [];
@@ -209,7 +212,6 @@ class Bubble {
     this.originalFrictionAir = 0.001;
 
     // Animation & frame tracking state
-    this.wobblePhase = Math.random() * Math.PI * 2;
     this.captureAnimProgress = 0;
     this.flightFrameIndex = 0;
     this.flightFrameTimer = 0;
@@ -219,13 +221,9 @@ class Bubble {
     this.destroyed = false;
     this._lastUpdateFrame = -1;
     this._lastRenderFrame = -1;
-    this._boundCandyRef = (typeof levelManager !== 'undefined' && levelManager && levelManager.candy)
-      ? levelManager.candy
-      : null;
 
     this.body = null;
     this._beforeUpdateHandler = null;
-    this._lastForceTime = 0;
 
     if (!MechanicsAssets.loaded) {
       MechanicsAssets.preload();
@@ -315,7 +313,7 @@ class Bubble {
   }
 
   /**
-   * Applies the upward anti-gravity force (Matter.Body.applyForce) to the captured candy each step.
+   * Applies the upward anti-gravity force to the captured candy each step.
    */
   applyBuoyancyStep() {
     if (this.state !== 'CAPTURED' || !this.capturedCandyBody || this.destroyed) return;
@@ -326,7 +324,7 @@ class Bubble {
       return;
     }
 
-    // If the captured candy body was removed from the physics world (e.g. level restart/change), clean up
+    // If the captured candy body was removed from the physics world, clean up
     if (
       this.physicsWorld &&
       this.physicsWorld.world &&
@@ -371,7 +369,6 @@ class Bubble {
       y: upwardForceY
     });
 
-    // Clamp terminal upward speed so the candy rises smoothly
     if (candyBody.velocity && candyBody.velocity.y < -maxUpwardSpeed) {
       Matter.Body.setVelocity(candyBody, {
         x: candyBody.velocity.x,
@@ -381,7 +378,7 @@ class Bubble {
   }
 
   /**
-   * Updates visual animations and pop particles (idempotent per p5 frameCount).
+   * Updates visual animations and pop particles.
    */
   update() {
     if (this.destroyed) return;
@@ -390,8 +387,6 @@ class Bubble {
       if (this._lastUpdateFrame === frameCount) return;
       this._lastUpdateFrame = frameCount;
     }
-
-    this.wobblePhase += 0.09;
 
     if (this.state === 'CAPTURED') {
       this.captureAnimProgress = Math.min(1, this.captureAnimProgress + 0.12);
@@ -507,26 +502,7 @@ class Bubble {
    * Plays assets/mechanics/pop.mp3 from MechanicsAssets respecting audioManager.isMuted.
    */
   playPopSound() {
-    if (typeof audioManager !== 'undefined' && audioManager && audioManager.isMuted) {
-      return;
-    }
-
-    if (typeof MechanicsAssets !== 'undefined' && MechanicsAssets && MechanicsAssets.popSound) {
-      try {
-        const snd = MechanicsAssets.popSound;
-        if (typeof snd.play === 'function') {
-          if (typeof snd.currentTime === 'number') {
-            snd.currentTime = 0;
-          }
-          const playPromise = snd.play();
-          if (playPromise && typeof playPromise.catch === 'function') {
-            playPromise.catch(() => {});
-          }
-        }
-      } catch (err) {
-        // Ignore browser autoplay restrictions
-      }
-    }
+    MechanicsAssets.playSound(MechanicsAssets.popSound);
   }
 
   /**
@@ -551,25 +527,19 @@ class Bubble {
 
     if (this.state === 'IDLE') {
       // Static circular bubble waiting for the candy using Frame 0 of bubble_attached.png
-      const attachedFrame = (typeof BUBBLE_ATTACHED_FRAMES !== 'undefined' && Array.isArray(BUBBLE_ATTACHED_FRAMES))
-        ? BUBBLE_ATTACHED_FRAMES[0]
-        : { x: 0, y: 0, w: 98, h: 98 };
+      const attachedFrame = BUBBLE_ATTACHED_FRAMES[0];
       const diameter = this.radius * 2.15;
 
-      const drewAttached = (
-        typeof MechanicsAssets !== 'undefined' &&
-        MechanicsAssets &&
-        MechanicsAssets.drawImageOrRegion(
-          MechanicsAssets.bubbleAttachedSheet,
-          0,
-          0,
-          diameter,
-          diameter,
-          attachedFrame.x,
-          attachedFrame.y,
-          attachedFrame.w,
-          attachedFrame.h
-        )
+      const drewAttached = MechanicsAssets.drawImageOrRegion(
+        MechanicsAssets.bubbleAttachedSheet,
+        0,
+        0,
+        diameter,
+        diameter,
+        attachedFrame.x,
+        attachedFrame.y,
+        attachedFrame.w,
+        attachedFrame.h
       );
 
       if (!drewAttached) {
@@ -580,44 +550,21 @@ class Bubble {
       const bounceScale = 1 + Math.sin(this.captureAnimProgress * Math.PI) * 0.12;
       scale(bounceScale, bounceScale);
 
-      const flightFrames = (typeof BUBBLE_FLIGHT_FRAMES !== 'undefined' && Array.isArray(BUBBLE_FLIGHT_FRAMES))
-        ? BUBBLE_FLIGHT_FRAMES
-        : [
-            { x: 0, y: 0,    w: 90,  h: 108 },
-            { x: 0, y: 108,  w: 90,  h: 107 },
-            { x: 0, y: 215,  w: 94,  h: 103 },
-            { x: 0, y: 318,  w: 98,  h: 100 },
-            { x: 0, y: 418,  w: 102, h: 98  },
-            { x: 0, y: 516,  w: 106, h: 93  },
-            { x: 0, y: 609,  w: 108, h: 90  },
-            { x: 0, y: 699,  w: 108, h: 89  },
-            { x: 0, y: 788,  w: 106, h: 90  },
-            { x: 0, y: 878,  w: 102, h: 94  },
-            { x: 0, y: 972,  w: 98,  h: 99  },
-            { x: 0, y: 1071, w: 94,  h: 105 },
-            { x: 0, y: 1176, w: 90,  h: 107 },
-            { x: 0, y: 1283, w: 90,  h: 109 }
-          ];
-
-      const frame = flightFrames[this.flightFrameIndex % flightFrames.length];
+      const frame = BUBBLE_FLIGHT_FRAMES[this.flightFrameIndex % BUBBLE_FLIGHT_FRAMES.length];
       const baseSize = this.radius * 2.35;
       const drawW = baseSize * (frame.w / 99);
       const drawH = baseSize * (frame.h / 99);
 
-      const drewFlight = (
-        typeof MechanicsAssets !== 'undefined' &&
-        MechanicsAssets &&
-        MechanicsAssets.drawImageOrRegion(
-          MechanicsAssets.bubbleSheet,
-          0,
-          0,
-          drawW,
-          drawH,
-          frame.x,
-          frame.y,
-          frame.w,
-          frame.h
-        )
+      const drewFlight = MechanicsAssets.drawImageOrRegion(
+        MechanicsAssets.bubbleSheet,
+        0,
+        0,
+        drawW,
+        drawH,
+        frame.x,
+        frame.y,
+        frame.w,
+        frame.h
       );
 
       if (!drewFlight) {
@@ -633,46 +580,10 @@ class Bubble {
    * @param {number} diameter
    */
   renderVectorFallback(diameter) {
-    // 1. Translucent soap bubble body
-    noStroke();
-    fill(135, 220, 255, this.state === 'CAPTURED' ? 68 : 52);
+    fill(135, 220, 255, 60);
+    stroke(205, 248, 255, 220);
+    strokeWeight(2);
     circle(0, 0, diameter);
-
-    // Inner soft rim glow
-    noFill();
-    stroke(170, 235, 255, 95);
-    strokeWeight(4.5);
-    circle(0, 0, diameter * 0.93);
-
-    // Outer crisp soap rim
-    stroke(205, 248, 255, 225);
-    strokeWeight(2.4);
-    circle(0, 0, diameter);
-
-    // Subtle rainbow iridescence arcs
-    stroke(255, 185, 225, 125);
-    strokeWeight(2.4);
-    arc(0, 0, diameter * 0.86, diameter * 0.86, -Math.PI * 0.85, -Math.PI * 0.28);
-
-    stroke(255, 245, 155, 130);
-    strokeWeight(2.0);
-    arc(0, 0, diameter * 0.80, diameter * 0.80, -Math.PI * 0.76, -Math.PI * 0.18);
-
-    stroke(145, 245, 255, 145);
-    strokeWeight(2.0);
-    arc(0, 0, diameter * 0.88, diameter * 0.88, Math.PI * 0.15, Math.PI * 0.72);
-
-    // 2. Crisp glossy specular highlights
-    noStroke();
-    fill(255, 255, 255, 220);
-    push();
-    translate(-diameter * 0.22, -diameter * 0.22);
-    rotate(-Math.PI / 4);
-    ellipse(0, 0, diameter * 0.25, diameter * 0.13);
-    pop();
-
-    fill(255, 255, 255, 160);
-    circle(diameter * 0.22, diameter * 0.24, diameter * 0.08);
   }
 
   /**
@@ -750,27 +661,14 @@ class Bubble {
         continue;
       }
 
-      if (
-        inst._boundCandyRef &&
-        typeof levelManager !== 'undefined' &&
-        levelManager &&
-        levelManager.candy &&
-        levelManager.candy !== inst._boundCandyRef
-      ) {
-        inst.destroy();
-        continue;
-      }
-
       const pw = inst.physicsWorld || world;
       const bodies = pw && pw.world && Array.isArray(pw.world.bodies) ? pw.world.bodies : null;
       if (bodies) {
-        if (bodies.length === 0) {
-          inst.destroy();
-        } else if (inst.state === 'IDLE' && inst.body && bodies.indexOf(inst.body) === -1) {
-          inst.destroy();
-        } else if (inst.state === 'CAPTURED' && inst.capturedCandyBody && bodies.indexOf(inst.capturedCandyBody) === -1) {
-          inst.destroy();
-        } else if (inst.state === 'POPPED' && inst.popRingAlpha <= 0 && inst.popParticles.length === 0) {
+        if (
+          (inst.state === 'IDLE' && inst.body && bodies.indexOf(inst.body) === -1) ||
+          (inst.state === 'CAPTURED' && inst.capturedCandyBody && bodies.indexOf(inst.capturedCandyBody) === -1) ||
+          (inst.state === 'POPPED' && inst.popRingAlpha <= 0 && inst.popParticles.length === 0)
+        ) {
           inst.destroy();
         }
       }
@@ -804,51 +702,28 @@ class AirCushion {
    * - new AirCushion(x, y, directionOrAngle = 'RIGHT', options = {})
    * - new AirCushion(physicsWorld, x, y, directionOrAngle = 'RIGHT', options = {})
    */
-  constructor(worldOrX, xOrY, yOrDir = 'RIGHT', dirOrOptions = {}, maybeOptions = {}) {
+  constructor(worldOrX, xOrY, yOrDir = 'RIGHT', dirOrOptions = {}) {
     let rawDir = 'RIGHT';
-    let opts = {};
 
     if (typeof worldOrX === 'object' && worldOrX !== null) {
       this.physicsWorld = worldOrX;
       this.x = Number(xOrY) || 0;
       this.y = Number(yOrDir) || 0;
-      if (typeof dirOrOptions === 'object' && dirOrOptions !== null && !dirOrOptions.body && !dirOrOptions.position) {
-        opts = dirOrOptions;
-        rawDir = opts.direction !== undefined ? opts.direction : (opts.angle !== undefined ? opts.angle : 'RIGHT');
-      } else {
-        rawDir = dirOrOptions !== undefined ? dirOrOptions : 'RIGHT';
-        opts = (typeof maybeOptions === 'object' && maybeOptions !== null) ? maybeOptions : {};
-      }
+      rawDir = dirOrOptions !== undefined ? dirOrOptions : 'RIGHT';
     } else {
       this.physicsWorld = typeof physicsWorld !== 'undefined' ? physicsWorld : null;
       this.x = Number(worldOrX) || 0;
       this.y = Number(xOrY) || 0;
-      if (typeof yOrDir === 'object' && yOrDir !== null && !yOrDir.body && !yOrDir.position) {
-        opts = yOrDir;
-        rawDir = opts.direction !== undefined ? opts.direction : (opts.angle !== undefined ? opts.angle : 'RIGHT');
-      } else {
-        rawDir = yOrDir !== undefined ? yOrDir : 'RIGHT';
-        opts = (typeof dirOrOptions === 'object' && dirOrOptions !== null) ? dirOrOptions : {};
-      }
+      rawDir = yOrDir !== undefined ? yOrDir : 'RIGHT';
     }
 
-    const defaultRadius = typeof AIR_CUSHION_RADIUS !== 'undefined' ? AIR_CUSHION_RADIUS : 48;
-    const defaultRange = typeof AIR_CUSHION_RANGE !== 'undefined' ? AIR_CUSHION_RANGE : 240;
-    const defaultCone = typeof AIR_CUSHION_CONE_HALF_ANGLE !== 'undefined' ? AIR_CUSHION_CONE_HALF_ANGLE : Math.PI * 0.38;
-    const defaultForce = typeof AIR_CUSHION_FORCE !== 'undefined' ? AIR_CUSHION_FORCE : 0.0085;
-    const defaultBoost = typeof AIR_CUSHION_VELOCITY_BOOST !== 'undefined' ? AIR_CUSHION_VELOCITY_BOOST : 0.65;
-
     this.type = 'air_cushion';
-    this.radius = Number(opts.radius) || defaultRadius;
-    this.range = Number(opts.range) || defaultRange;
-    this.coneHalfAngle = Number(opts.coneHalfAngle) || defaultCone;
-    this.force = Number(opts.force) || defaultForce;
-    this.velocityBoost = Number(opts.velocityBoost) || defaultBoost;
+    this.radius = typeof AIR_CUSHION_RADIUS !== 'undefined' ? AIR_CUSHION_RADIUS : 48;
+    this.range = typeof AIR_CUSHION_RANGE !== 'undefined' ? AIR_CUSHION_RANGE : 240;
+    this.coneHalfAngle = typeof AIR_CUSHION_CONE_HALF_ANGLE !== 'undefined' ? AIR_CUSHION_CONE_HALF_ANGLE : Math.PI * 0.38;
+    this.force = typeof AIR_CUSHION_FORCE !== 'undefined' ? AIR_CUSHION_FORCE : 0.0085;
+    this.velocityBoost = typeof AIR_CUSHION_VELOCITY_BOOST !== 'undefined' ? AIR_CUSHION_VELOCITY_BOOST : 0.65;
     this.angle = AirCushion.normalizeAngle(rawDir);
-
-    // Optional explicit candy reference if passed in constructor
-    const explicitCandy = opts.candy || opts.candyBody || (dirOrOptions && (dirOrOptions.body || dirOrOptions.position) ? dirOrOptions : null);
-    this.targetCandyBody = (explicitCandy && explicitCandy.body) ? explicitCandy.body : explicitCandy;
 
     // Animation & interaction state
     this.isPuffing = false;
@@ -859,9 +734,6 @@ class AirCushion {
     this.destroyed = false;
     this._lastUpdateFrame = -1;
     this._lastRenderFrame = -1;
-    this._boundCandyRef = (typeof levelManager !== 'undefined' && levelManager && levelManager.candy)
-      ? levelManager.candy
-      : null;
 
     this.body = null;
 
@@ -942,11 +814,6 @@ class AirCushion {
     if (typeof levelManager !== 'undefined' && levelManager && levelManager.candy) {
       if (levelManager.candy.eaten) return null;
       if (levelManager.candy.body) return levelManager.candy.body;
-    }
-
-    if (this.targetCandyBody && this.targetCandyBody.position) {
-      if (this.targetCandyBody.gameObject && this.targetCandyBody.gameObject.eaten) return null;
-      return this.targetCandyBody;
     }
 
     if (this.physicsWorld && this.physicsWorld.world && Array.isArray(this.physicsWorld.world.bodies)) {
@@ -1031,15 +898,6 @@ class AirCushion {
   }
 
   /**
-   * Alias for puff() in case external callers invoke trigger() or activate().
-   * @param {Matter.Body|Object|null} [candyOverride]
-   * @returns {boolean}
-   */
-  trigger(candyOverride = null) {
-    return this.puff(candyOverride);
-  }
-
-  /**
    * Evaluates whether the candy is within this cushion's air cone and applies Matter.Body.applyForce.
    * @param {Matter.Body|Object|null} [candyOverride]
    * @returns {boolean} True if force was applied to the candy
@@ -1100,26 +958,7 @@ class AirCushion {
    * Plays assets/mechanics/cushion.mp3 from MechanicsAssets respecting audioManager.isMuted.
    */
   playCushionSound() {
-    if (typeof audioManager !== 'undefined' && audioManager && audioManager.isMuted) {
-      return;
-    }
-
-    if (typeof MechanicsAssets !== 'undefined' && MechanicsAssets && MechanicsAssets.cushionSound) {
-      try {
-        const snd = MechanicsAssets.cushionSound;
-        if (typeof snd.play === 'function') {
-          if (typeof snd.currentTime === 'number') {
-            snd.currentTime = 0;
-          }
-          const playPromise = snd.play();
-          if (playPromise && typeof playPromise.catch === 'function') {
-            playPromise.catch(() => {});
-          }
-        }
-      } catch (err) {
-        // Ignore browser autoplay restrictions
-      }
-    }
+    MechanicsAssets.playSound(MechanicsAssets.cushionSound);
   }
 
   /**
@@ -1232,36 +1071,21 @@ class AirCushion {
     // In cushion.png, the nozzle points UP (-PI/2), so rotating by (this.angle + PI/2) points it along this.angle
     rotate(this.angle + Math.PI * 0.5);
 
-    const frames = typeof CUSHION_FRAMES !== 'undefined' && Array.isArray(CUSHION_FRAMES)
-      ? CUSHION_FRAMES
-      : [
-          { x: 10, y: 2, w: 133, h: 140 },
-          { x: 0, y: 175, w: 132, h: 150 },
-          { x: 0, y: 343, w: 131, h: 168 },
-          { x: 10, y: 525, w: 131, h: 147 },
-          { x: 11, y: 688, w: 136, h: 125 },
-          { x: 10, y: 829, w: 133, h: 131 }
-        ];
-
-    const frame = frames[Math.min(frames.length - 1, Math.max(0, this.animFrameIndex))];
+    const frame = CUSHION_FRAMES[Math.min(CUSHION_FRAMES.length - 1, Math.max(0, this.animFrameIndex))];
     const baseSize = this.radius * 2.3;
     const drawW = baseSize * (frame.w / 140);
     const drawH = baseSize * (frame.h / 140);
 
-    const drewSprite = (
-      typeof MechanicsAssets !== 'undefined' &&
-      MechanicsAssets &&
-      MechanicsAssets.drawImageOrRegion(
-        MechanicsAssets.cushionSheet,
-        0,
-        0,
-        drawW,
-        drawH,
-        frame.x,
-        frame.y,
-        frame.w,
-        frame.h
-      )
+    const drewSprite = MechanicsAssets.drawImageOrRegion(
+      MechanicsAssets.cushionSheet,
+      0,
+      0,
+      drawW,
+      drawH,
+      frame.x,
+      frame.y,
+      frame.w,
+      frame.h
     );
 
     if (!drewSprite) {
@@ -1276,48 +1100,10 @@ class AirCushion {
    */
   renderVectorFallback() {
     const r = this.radius;
-    const stretchY = this.isPuffing
-      ? (this.animFrameIndex <= 2 ? 1.16 : 0.90)
-      : 1.0;
-    const stretchX = this.isPuffing
-      ? (this.animFrameIndex <= 2 ? 0.88 : 1.08)
-      : 1.0;
-
-    push();
-    scale(stretchX, stretchY);
-
-    // Drop shadow
-    noStroke();
-    fill(20, 30, 45, 70);
-    ellipse(2, 4, r * 1.85, r * 1.75);
-
-    // Nozzle neck at top (-Y)
     stroke(34, 48, 72);
-    strokeWeight(2.4);
-    fill(74, 130, 228);
-    rectMode(CENTER);
-    rect(0, -r * 0.86, r * 0.42, r * 0.36, 5);
-
-    // Nozzle lip
-    fill(105, 162, 250);
-    ellipse(0, -r * 1.02, r * 0.62, r * 0.24);
-    fill(32, 52, 88);
-    ellipse(0, -r * 1.03, r * 0.36, r * 0.11);
-
-    // Main cushion bulb
+    strokeWeight(2.2);
     fill(92, 148, 245);
     ellipse(0, 0, r * 1.8, r * 1.7);
-
-    // Inner darker blue patch
-    noStroke();
-    fill(65, 114, 208);
-    rect(0, 0, r * 1.05, r * 1.05, 14);
-
-    // Gloss highlight
-    fill(190, 232, 255, 220);
-    ellipse(r * 0.42, -r * 0.38, r * 0.22, r * 0.32);
-
-    pop();
   }
 
   /**
@@ -1362,7 +1148,6 @@ class AirCushion {
       this.physicsWorld.removeBody(this.body);
     }
     this.body = null;
-    this.targetCandyBody = null;
 
     const idx = AirCushion.activeInstances.indexOf(this);
     if (idx !== -1) {
