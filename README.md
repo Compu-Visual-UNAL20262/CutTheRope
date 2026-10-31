@@ -49,9 +49,8 @@ The player slices the ropes by swiping across the screen with a blade gesture, t
 ### Controls
 | Input / Action | Interaction | Description |
 | :---: | :---: | :--- |
-| <img src="assets/docs/controls_left_click.gif" alt="Left Click & Drag / Slice" width="75" /><br><sub>**Left Click & Drag**</sub><br><sub><a href="https://www.flaticon.com/authors/smashicons" target="_blank" rel="noopener">Smashicons</a></sub> | ✂️ **Rope Slicing & UI Tap** | Click and drag across ropes to sever them with a blade slash trail and sparkle burst; click to press Start and interact with bubbles or cushions |
-| <img src="assets/docs/controls_right_click.gif" alt="Right Click / Reset" width="75" /><br><sub>**Right Click**</sub><br><sub><a href="https://www.flaticon.com/authors/smashicons" target="_blank" rel="noopener">Smashicons</a></sub> | 🔄 **Secondary Interaction / Quick Reset** | Secondary click action for immediate level restart and resetting puzzle states |
-| <img src="assets/docs/controls_cursor.gif" alt="Mouse Movement & Cursor Tracking" width="75" /><br><sub>**Mouse Movement**</sub><br><sub><a href="https://www.flaticon.com/authors/smashicons" target="_blank" rel="noopener">Smashicons</a></sub> | 🖐️ **Cursor Tracking** | Custom white pointer with real-time motion physics, velocity tilt, and dynamic particle ribbon trail |
+| <img src="assets/docs/controls_left_click.gif" alt="Left Click & Drag / Slice" width="75" /><br><sub>**Left Click & Drag**</sub><br><sub><a href="https://www.flaticon.com/authors/smashicons" target="_blank" rel="noopener">Smashicons</a></sub> | ✂️ **Rope Slicing & UI Interaction** | Primary interaction: click and drag across ropes to sever them with a blade slash trail and sparkle bursts. Also used to press the Start button, pop floating bubbles, compress air cushions, and interact with victory/defeat overlays. |
+| <img src="assets/docs/controls_cursor.gif" alt="Mouse Movement & Cursor Tracking" width="75" /><br><sub>**Mouse Movement**</sub><br><sub><a href="https://www.flaticon.com/authors/smashicons" target="_blank" rel="noopener">Smashicons</a></sub> | 🖐️ **Cursor Tracking** | Custom white pointer with real-time motion physics, velocity-dependent angle tilt, and dynamic particle ribbon trail. |
 
 <p align="center"><sub><em>Control icons designed by <a href="https://www.flaticon.com/authors/smashicons" target="_blank" rel="noopener">Smashicons from Flaticon</a> (Free License with Attribution). Enhanced with custom procedural animations simulating tactile clicks, velocity tilt, radial ripple waves, and blade cut motions.</em></sub></p>
 
@@ -65,8 +64,15 @@ The player slices the ropes by swiping across the screen with a blade gesture, t
 - **Om Nom (Target Zone):** Positioned on a pedestal at the bottom of the screen. Features an open-mouth sensor zone that detects candy contact, triggering happy victory eating sequences and advancing the game.
 - **Star Collectibles:** Up to three golden stars are placed strategically in each level. Candy touching a star collects it, producing celebratory particle fireworks and updating the score.
 - **Gimmicks & Elements:**
-  - **Bubbles:** Encapsulate the candy upon contact, counteracting gravity and causing it to float upward until popped by the player.
-  - **Spikes:** Hazardous obstacles that shatter the candy on contact, forcing a level restart.
+  - **Bubbles (`Bubble`):** Encapsulate the candy upon contact, counteracting gravitational pull and causing it to float upward in buoyant levitation until clicked/popped by the player.
+  - **Air Cushions (`AirCushion`):** Directional bellows that trigger an outward directional air impulse when pressed, propelling the candy along a calculated trajectory.
+  - **Spikes & Hazards:** Scheduled as part of future milestones (see [Technical Debt](#-technical-debt--known-scope-limitations)).
+
+- **Level Progression Overview:**
+  - **Level 1 (Simple Pendulum):** Introduction to single-rope swinging mechanics, target feeding, and collecting 3 stars.
+  - **Level 2 (Tension Triangle):** Three ropes under competing multi-angle tension requiring strategic cut sequences.
+  - **Level 3 (Antigravity Bubble):** Release from rope constraint into a rising bubble to reach Om Nom.
+  - **Level 4 (Cushion Propulsion):** Air cushion pulses guiding the treat horizontally into an antigravity bubble to feed Om Nom situated at the upper level.
 
 <br clear="right"/>
 
@@ -83,7 +89,7 @@ The project was developed under a contract-driven modular architecture where eac
 | Developer | Role | Module & Key Contributions |
 | :--- | :--- | :--- |
 | **Ángel** | **Core Architecture & Physics World** (*The Foundation*) | Authored [sketch.js](sketch.js) and [src/core/PhysicsWorld.js](src/core/PhysicsWorld.js). Established the Matter.js physics engine integration, 60 FPS update cycle, master gravity and boundaries, collision event dispatcher (`onCollide`), and coordinated the central orchestration lifecycle (`preload`, `setup`, `draw`, and input events). Co-authored [src/config.js](src/config.js). |
-| **Farid** | **Mechanics: Ropes, Cutting & Impulses** (*The Engineer*) | Authored [src/mechanics/Rope.js](src/mechanics/Rope.js), [src/mechanics/Cutter.js](src/mechanics/Cutter.js), and [src/mechanics/Gimmicks.js](src/mechanics/Gimmicks.js). Engineered multi-segment rope constraint chains, swipe raycasting line-intersection algorithms for cutting, and environmental interactions (floating bubbles, air cushions, spikes). Co-authored [src/config.js](src/config.js). |
+| **Farid** | **Mechanics: Ropes, Cutting & Impulses** (*The Engineer*) | Authored [src/mechanics/Rope.js](src/mechanics/Rope.js), [src/mechanics/Cutter.js](src/mechanics/Cutter.js), and [src/mechanics/Gimmicks.js](src/mechanics/Gimmicks.js). Engineered multi-segment rope constraint chains, swipe raycasting line-intersection algorithms for cutting, and environmental interactions (floating bubbles and directional air cushions). Co-authored [src/config.js](src/config.js). |
 | **Nicolás** | **Entities & Level Progression** (*The Level Designer*) | Authored [src/entities/Candy.js](src/entities/Candy.js), [src/entities/Target.js](src/entities/Target.js), [src/entities/Collectibles.js](src/entities/Collectibles.js), and [src/entities/LevelManager.js](src/entities/LevelManager.js). Built the candy rigid body logic, Om Nom target mouth sensor, star collection tracking, level coordinate definitions, and stage loading sequences. |
 | **Ariadna** | **UI, Game States, Visual Effects & Audio** (*The Artist & Coordinator*) | Authored [src/ui/GameState.js](src/ui/GameState.js), [src/ui/UIManager.js](src/ui/UIManager.js), [src/ui/AudioManager.js](src/ui/AudioManager.js), [src/ui/UIAssetData.js](src/ui/UIAssetData.js), [src/ui/CustomCursor.js](src/ui/CustomCursor.js), and [src/ui/ParticleSystem.js](src/ui/ParticleSystem.js). Designed the loading screen with Apptivity banner and striped candy progress bar, main menu with swinging candy pendulum, rope-hung wooden signboard, interactive Start button, custom white cursor with slice trail, background music manager with autoplay unlock, and offline base64 asset bundling. |
 
@@ -107,30 +113,37 @@ CutTheRope/
 │   ├── docs/
 │   │   ├── controls_cursor.gif      # Animated cursor motion & trail icon (Smashicons)
 │   │   ├── controls_left_click.gif  # Animated left-click & slice icon (Smashicons)
-│   │   ├── controls_right_click.gif # Animated right-click icon (Smashicons)
 │   │   ├── cut_the_rope_cover.png   # High-resolution original promotional artwork
-│   │   ├── om_nom_brain_power.gif   # Deep thinking brain power Om Nom GIF (Tenor)
-│   │   ├── om_nom_clapping.gif      # Celebratory animated Om Nom GIF (Tenor)
-│   │   ├── om_nom_excited.gif       # Cheerful victory celebration GIF (Tenor)
-│   │   ├── om_nom_feedme.gif        # Hungry Om Nom waiting for candy GIF (Tenor)
-│   │   ├── om_nom_freaking_out.gif  # Stressed Om Nom screaming GIF (Tenor)
-│   │   ├── om_nom_jaw_dropping.gif  # Impressed jaw-dropping Om Nom GIF (Tenor)
-│   │   ├── om_nom_kiss.gif          # Loving kiss Om Nom GIF (Tenor)
-│   │   ├── om_nom_mad.gif           # Mad annoyed stomping Om Nom GIF (Tenor)
-│   │   ├── om_nom_marching.gif      # Disciplined marching Om Nom GIF (Tenor)
-│   │   ├── om_nom_ready_to_fight.gif# Battle stance Om Nom GIF (Tenor)
-│   │   ├── om_nom_shaking_head.gif  # Shaking head disapproval Om Nom GIF (Tenor)
-│   │   ├── om_nom_surprised.gif     # Surprised Om Nom & Om Nelle GIF (Tenor)
-│   │   ├── om_nom_thinking.gif      # Pondering puzzle Om Nom GIF (Tenor)
-│   │   ├── om_nom_wow.gif           # Impressed Wow Om Nom GIF (Tenor)
-│   │   └── om_nom_yawn.gif          # Bored yawning Om Nom GIF (Tenor - Asset reserve)
+│   │   └── ...                      # 15 Om Nom reaction and emotion GIFs (Tenor)
+│   ├── entities/                   # Entity sprites and interactive audio effects
+│   │   ├── candy_sprite.png        # Rotating swirl candy sprite sheet
+│   │   ├── monster_chewing.wav     # Om Nom chewing audio SFX
+│   │   ├── monster_open.wav        # Om Nom mouth open audio SFX
+│   │   ├── monster_sad.wav         # Om Nom sad sigh audio SFX
+│   │   ├── sprite.png              # Master Om Nom body sprite sheet
+│   │   ├── star_1.wav..star_3.wav  # Ascending star collection chimes
+│   │   ├── star_sprite.png         # Golden star rotation sprite sheet
+│   │   └── support_sprite.png      # Wooden pedestal sprite
 │   ├── favicon/                    # Web application icons and manifest
+│   ├── fonts/
+│   │   └── Fredoka/                # Fredoka rounded bold UI font family
+│   ├── mechanics/                  # Mechanics sprites and audio effects
+│   │   ├── bubble_attached.png     # Bubble surrounding candy sprite
+│   │   ├── bubble_sheet.png        # Bubble wobble & pop sprite sheet
+│   │   ├── cushion.mp3             # Air cushion / pump puff audio SFX
+│   │   ├── cushion.png             # Directional air cushion bellows sprite
+│   │   ├── pin.png                 # Static ceiling rope pin sprite
+│   │   ├── pop.mp3                 # Bubble popping audio SFX
+│   │   └── slice.mp3               # Rope slicing audio SFX
 │   ├── ui/
 │   │   ├── apptivity_banner.png    # Om Nom open mouth loading banner
 │   │   ├── apptivity_stars.png     # Decorative banner stars
 │   │   ├── background_cardboard_clean.jpg # Clean cardboard background texture
 │   │   ├── btn_default_normal.png  # 3D red pill button normal state (455x102)
 │   │   ├── btn_default_pressed.png # 3D yellow pill button pressed state (455x102)
+│   │   ├── btn_retry.png           # Level retry icon button
+│   │   ├── next_level.png          # Next level progression button
+│   │   ├── menu_button.png         # Menu return button
 │   │   ├── candy_swirl.png         # Swirl candy sprite
 │   │   ├── loaderbar_full.png      # Striped candy progress bar texture
 │   │   ├── menu_bgr_opt.jpg        # Optimized cardboard menu background
@@ -151,16 +164,18 @@ CutTheRope/
 │   ├── entities/
 │   │   ├── Candy.js                # Candy entity physics & rendering
 │   │   ├── Collectibles.js         # Star collectible items
-│   │   ├── LevelManager.js         # Level layout configuration & stage sequencer
+│   │   ├── EntitiesAssets.js       # Preloader and asset container for entity sprites/audio
+│   │   ├── LevelManager.js         # Level layout configuration & stage sequencer (Levels 1-4)
+│   │   ├── SpriteAnimation.js      # Frame-by-frame sprite sheet animator
 │   │   └── Target.js               # Om Nom mouth target zone & eating trigger
 │   ├── mechanics/
 │   │   ├── Cutter.js               # Touch/mouse swipe detection & rope severing
-│   │   ├── Gimmicks.js             # Bubbles, air cushions & spikes
+│   │   ├── Gimmicks.js             # Environmental bubbles and directional air cushions
 │   │   └── Rope.js                 # Multi-segment constraint chain
 │   └── ui/
 │       ├── AudioManager.js         # Background music, autoplay unlock & volume fade
 │       ├── CustomCursor.js         # Custom white pointer, slash ribbon & sparkle burst
-│       ├── GameState.js            # State machine (LOADING, MENU, PLAYING, WON, LOST)
+│       ├── GameState.js            # State machine (LOADING, MENU, PLAYING, WON, LOST, COMPLETED)
 │       ├── ParticleSystem.js       # Star collection sparkles & cut particles
 │       ├── UIAssetData.js          # In-memory Base64 offline asset bundle
 │       └── UIManager.js            # Loading screen, menu signboard, HUD & overlays
@@ -178,11 +193,13 @@ CutTheRope/
 - **[src/core/PhysicsWorld.js](src/core/PhysicsWorld.js):** Wraps Matter.js `Engine`, `World`, and `Composite`. Evaluates collision pairs and routes callbacks to entity instances.
 - **[src/mechanics/Rope.js](src/mechanics/Rope.js):** Manages Matter.js constraint chains linking static pins to the candy body.
 - **[src/mechanics/Cutter.js](src/mechanics/Cutter.js):** Tracks blade drag trajectories, runs segment-intersection queries against ropes, and triggers cut particle feedback.
-- **[src/mechanics/Gimmicks.js](src/mechanics/Gimmicks.js):** Controls environmental puzzle elements including buoyant bubbles and hazards.
+- **[src/mechanics/Gimmicks.js](src/mechanics/Gimmicks.js):** Controls environmental puzzle elements including buoyant bubbles (`Bubble`) and directional air cushions (`AirCushion`).
 - **[src/entities/Candy.js](src/entities/Candy.js):** Candy rigid body kinematics, angular momentum, and visual rendering with thread-hole alignment.
 - **[src/entities/Target.js](src/entities/Target.js):** Om Nom character entity with trigger collision bounds and mouth-opening reaction.
 - **[src/entities/Collectibles.js](src/entities/Collectibles.js):** Star sensors that register candy collection, play sparkle animations, and increment score counters.
-- **[src/entities/LevelManager.js](src/entities/LevelManager.js):** Spawns entities, anchors ropes, and transitions stages upon level completion.
+- **[src/entities/EntitiesAssets.js](src/entities/EntitiesAssets.js):** Coordinates loading and instantiating of character animations, candy sprites, and sound effects for Om Nom and collectibles.
+- **[src/entities/SpriteAnimation.js](src/entities/SpriteAnimation.js):** Generic sprite sheet animator managing frame rate, playback pacing, and looping for animated characters and stars.
+- **[src/entities/LevelManager.js](src/entities/LevelManager.js):** Spawns entities, anchors ropes, and transitions stages across all four playable levels.
 - **[src/ui/GameState.js](src/ui/GameState.js):** Manages lifecycles with observer pattern notifications (`addListener`).
 - **[src/ui/UIManager.js](src/ui/UIManager.js):** Renders the animated Apptivity loading screen, the main menu with rope-hung signboard, swinging candy pendulum, breathing Om Nom pedestal, interactive Start button, and HUD.
 - **[src/ui/AudioManager.js](src/ui/AudioManager.js):** Audio controller managing the menu theme music, looping, browser autoplay unlock, tab visibility transitions, and smooth fade-outs.
@@ -262,10 +279,23 @@ In strict adherence to intellectual property standards and educational use guide
 <img align="right" src="assets/docs/om_nom_freaking_out.gif" alt="Freaking Out Om Nom Screaming" width="160" style="margin-left: 20px; margin-bottom: 10px;" />
 
 ### Audio Sources & Attribution
-- **Menu Theme Track:**
+The audio pipeline cleanly distinguishes between the ambient soundtrack and interactive gameplay sound effects:
+
+- **Menu Theme Soundtrack:**
   Sourced from [Khinsider – Cut the Rope Arcade Gamerip (2016)](https://downloads.khinsider.com/game-soundtracks/album/cut-the-rope-arcade-gamerip-2016).
   - File: [`assets/06.-Menu-Music-Theme.wav`](assets/06.-Menu-Music-Theme.wav)
   - Format: Uncompressed 16-bit PCM WAV, 22,050 Hz Mono, 60.01 seconds seamless loop.
+
+- **Interactive Gameplay Sound Effects (SFX):**
+  All interactive sound effects—distinct from the background soundtrack—were sourced from [The Sounds Resource – Cut the Rope (Mobile) Asset #399589](https://sounds.spriters-resource.com/mobile/cutrope/asset/399589/):
+  - **Rope Slicing:** [`assets/mechanics/slice.mp3`](assets/mechanics/slice.mp3) — Swish sound effect triggered when the swipe path cuts through a rope segment.
+  - **Bubble Popping:** [`assets/mechanics/pop.mp3`](assets/mechanics/pop.mp3) — Crisp pop sound effect triggered upon bursting a buoyant bubble.
+  - **Air Cushion Puff:** [`assets/mechanics/cushion.mp3`](assets/mechanics/cushion.mp3) — Directional compressed air pulse sound when tapping an air cushion / bellows.
+  - **Star Collection Chimes:** [`assets/entities/star_1.wav`](assets/entities/star_1.wav), [`assets/entities/star_2.wav`](assets/entities/star_2.wav), [`assets/entities/star_3.wav`](assets/entities/star_3.wav) — Ascending melodic three-tier chime sequence as each consecutive star is collected.
+  - **Om Nom Reactions:**
+    - [`assets/entities/monster_open.wav`](assets/entities/monster_open.wav) — Anticipatory mouth opening sound when the candy approaches Om Nom.
+    - [`assets/entities/monster_chewing.wav`](assets/entities/monster_chewing.wav) — Satisfied crunching and chewing sound upon successfully catching the candy.
+    - [`assets/entities/monster_sad.wav`](assets/entities/monster_sad.wav) — Disappointed whimper/sigh when the candy is dropped out of bounds.
 
 ### Technical Audio Pipeline & Autoplay Compliance
 Modern web browsers enforce strict security restrictions regarding audio playback:
@@ -286,6 +316,7 @@ Modern web browsers enforce strict security restrictions regarding audio playbac
 
 - **Visual Sprites (PC):** [The Spriters Resource – Cut the Rope (PC)](https://www.spriters-resource.com/pc_computer/cuttherope/)
 - **Visual Sprites (Mobile Assets #51423):** [The Spriters Resource – Cut the Rope (Mobile)](https://www.spriters-resource.com/mobile/cutrope/asset/51423/)
+- **Gameplay Sound Effects (SFX Mobile Asset #399589):** [The Sounds Resource – Cut the Rope (Mobile)](https://sounds.spriters-resource.com/mobile/cutrope/asset/399589/)
 - **Controls & UI Vector Icons:** [Smashicons – Flaticon](https://www.flaticon.com/authors/smashicons) (Licensed under *Free License with Attribution*)
 - **Original Soundtrack Archive:** [Khinsider – Cut the Rope Arcade Gamerip (2016)](https://downloads.khinsider.com/game-soundtracks/album/cut-the-rope-arcade-gamerip-2016)
 - **Physics Engine Documentation:** [Matter.js Official Documentation & Constraint Guides](https://brm.io/matter-js/docs/)
@@ -300,10 +331,22 @@ Modern web browsers enforce strict security restrictions regarding audio playbac
 
 <img align="right" src="assets/docs/om_nom_wow.gif" alt="Wow Om Nom That's Amazing" width="160" style="margin-left: 20px; margin-bottom: 10px;" />
 
-The following items represent design compromises or features scheduled for subsequent development phases:
-- **Spiders & Additional Enemies:** Spiders climbing up ropes to steal the candy were deferred to a future milestone.
-- **Complex Multi-Candy Joints:** Dual-candy mechanics (connecting two treats simultaneously with elastic bands) were simplified to single-candy physics for this sprint.
-- **Level Selection World Map:** The game currently transitions directly from the Main Menu into Level 1, with stage sequencing handled programmatically by [LevelManager.js](src/entities/LevelManager.js) rather than through a card-pack selection screen.
+The following items represent architectural compromises, design differences, or features scheduled for subsequent development phases:
+
+- **Single Background Soundtrack (Limited Audio Palette):**
+  The game currently features only one of the multiple soundtracks available in the original release ([`assets/06.-Menu-Music-Theme.wav`](assets/06.-Menu-Music-Theme.wav)), looping continuously across states. It lacks the varied in-game world soundtracks (e.g., Cardboard Box, Fabric Box, Foil Box, Magic Box themes) as well as the commercial game's dynamic victory and defeat musical jingles.
+- **Menu & UI Buttons with Text Labels (Non-Original Graphics):**
+  The main menu and overlay action buttons use generic glossy pill capsules styled with programmatically rendered text labels via Canvas (`text('START')`, `text('NEXT')`, `text('RETRY')`, `text('MENU')`) rather than the bespoke, stylized typography and integrated iconography from the original game assets.
+- **Absence of Level Persistence & Save History:**
+  There is no level completion tracking or persistent storage mechanism (e.g., `localStorage` or cloud save). Progression is held strictly in volatile runtime memory (`LevelManager.currentLevel`). Reloading or closing the browser resets the player back to Level 1, and collected star scores are not retained across sessions.
+- **Missing In-Game Navigation & Extra HUD Controls:**
+  Inside active levels (`PLAYING` state), the HUD displays only the level number, collected stars, and an audio mute toggle. It does not include an in-game button to return to the main menu, a pause button, a hot-restart button, or any of the auxiliary buttons found in the original game (e.g., level select drawer, hint system, or shop shortcuts). If the candy gets stuck without falling out of bounds, players must trigger a loss or reload the page to restart.
+- **Spiders & Dynamic Obstacles:**
+  Spiders crawling up ropes to steal candy and hazards like electrical barriers or spikes were deferred to a future milestone.
+- **Complex Multi-Candy Joints:**
+  Dual-candy mechanics (connecting two treats simultaneously with elastic bands or combining halves) were simplified to single-candy physics for this sprint.
+- **Level Selection World Map & Card-Packs:**
+  The game currently transitions linearly from Level 1 to Level 4 via [LevelManager.js](src/entities/LevelManager.js) rather than presenting an interactive box selection map or star-gated level grid.
 
 <br clear="right"/>
 
